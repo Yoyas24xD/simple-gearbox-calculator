@@ -1,13 +1,8 @@
-import {
-  createContext,
-  useContext,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { createContext, useContext } from "react";
 
 export interface InitialDataContextProps {
   data: { rpm: number; torque: number }[];
-  setData: Dispatch<SetStateAction<InitialDataContextProps["data"]>>;
+  setData: (data: InitialDataContextProps["data"]) => void;
 }
 
 export const InitialDataContext = createContext<InitialDataContextProps | null>(

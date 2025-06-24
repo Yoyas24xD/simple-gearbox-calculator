@@ -5,14 +5,24 @@ import {
 } from "../hooks/use-initial-data";
 
 export const InitialDataProvider = ({ children }: { children: ReactNode }) => {
-  const [data, setData] = useState<InitialDataContextProps["data"]>([]);
+  const [innerData, setInnerData] = useState<InitialDataContextProps["data"]>(
+    []
+  );
+
+  const setData = (data: InitialDataContextProps["data"]) => {
+    const mappedData = data.map(({ rpm, torque }) => ({
+      rpm: rpm < 1000 ? rpm * 1000 : rpm,
+      torque,
+    }));
+    setInnerData(mappedData);
+  };
 
   const value = useMemo(
     () => ({
-      data,
-      setData,
+      data: innerData,
+      setData: setData,
     }),
-    [data]
+    [innerData]
   );
 
   return (
