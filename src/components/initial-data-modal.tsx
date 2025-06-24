@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useInitialData } from "../hooks/use-initial-data";
+import { toast } from "sonner";
 
 const parseCsv = (csv: string): { rpm: number; torque: number }[] => {
   return csv
@@ -38,9 +39,10 @@ export const InitialDataModal = () => {
           setCsv(""); // Clear the input after submission
           console.log("Parsed Data:", parsedData); // For debugging
           setIsOpen(false); // Close the modal after submission
+          toast.success("Data loaded successfully!");
         }}
       >
-        Submit
+        Load Csv
       </button>
     </section>,
     document.body

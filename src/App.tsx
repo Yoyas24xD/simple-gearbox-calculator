@@ -1,4 +1,6 @@
+import { GearConfig } from "./components/gear-config";
 import { InitialDataModal } from "./components/initial-data-modal";
+import { WheelConfig } from "./components/wheel-config";
 import { useHpLine } from "./hooks/use-hp-line";
 import { useInitialData } from "./hooks/use-initial-data";
 
@@ -12,6 +14,8 @@ export const App = () => {
   return (
     <main>
       <InitialDataModal />
+      <GearConfig />
+      <WheelConfig />
     </main>
   );
 };
