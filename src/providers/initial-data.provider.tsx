@@ -11,7 +11,7 @@ export const InitialDataProvider = ({ children }: { children: ReactNode }) => {
 
   const setData = (data: InitialDataContextProps["data"]) => {
     const mappedData = data.map(({ rpm, torque }) => ({
-      rpm: rpm < 1000 ? rpm * 1000 : rpm,
+      rpm: rpm < 100 ? rpm * 1000 : rpm,
       torque,
     }));
     setInnerData(mappedData);
