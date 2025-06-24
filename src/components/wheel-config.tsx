@@ -24,7 +24,6 @@ export const WheelConfig = () => {
     const newState = { ...state, [field]: value };
     setState(newState);
 
-    // Validación antes del cálculo
     const { width, profile, rimDiameter } = newState;
     if (width > 0 && profile > 0 && rimDiameter > 0) {
       const wheelNumber = newState.isAwd ? 4 : 2;
