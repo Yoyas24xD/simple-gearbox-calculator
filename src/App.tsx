@@ -1,5 +1,6 @@
 import { GearConfig } from "./components/gear-config";
 import { InitialDataModal } from "./components/initial-data-modal";
+import { GearsPlot } from "./components/plots/gears";
 import { LineChartMultiple } from "./components/plots/line";
 import { WheelConfig } from "./components/wheel-config";
 import { useHpLine } from "./hooks/use-hp-line";
@@ -13,8 +14,6 @@ export const App = () => {
     ...point,
     hp: hpLine[index],
   }));
-  const maxHpTorque = data[hpLine.indexOf(Math.max(...hpLine))];
-  console.log(maxHpTorque);
 
   return (
     <main>
@@ -43,6 +42,7 @@ export const App = () => {
           },
         ]}
       />
+      <GearsPlot data={dataWithHp} />
     </main>
   );
 };

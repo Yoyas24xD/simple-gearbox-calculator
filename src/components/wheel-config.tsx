@@ -11,9 +11,9 @@ interface WheelConfigState {
 export const WheelConfig = () => {
   const { wheelCircumference, setWheelCircumference } = useGears();
   const [state, setState] = useState<WheelConfigState>({
-    width: 0,
-    profile: 0,
-    rimDiameter: 0,
+    width: 305,
+    profile: 0.30,
+    rimDiameter: 17,
     isAwd: false,
   });
 

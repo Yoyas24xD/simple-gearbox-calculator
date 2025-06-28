@@ -25,7 +25,7 @@ export const useGearsSpeeds = (): number[][] => {
   );
 };
 
-function computeSpeedFromRpm(
+export function computeSpeedFromRpm(
   rpm: number,
   wheelCircumference: number,
   gearRatio: number,

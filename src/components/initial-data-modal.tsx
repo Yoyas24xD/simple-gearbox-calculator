@@ -37,7 +37,6 @@ export const InitialDataModal = () => {
           const parsedData = parseCsv(csv);
           setData(parsedData);
           setCsv(""); // Clear the input after submission
-          console.log("Parsed Data:", parsedData); // For debugging
           setIsOpen(false); // Close the modal after submission
           toast.success("Data loaded successfully!");
         }}
