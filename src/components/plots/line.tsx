@@ -12,10 +12,27 @@ interface Props {
   };
 }
 
-export const LineChartMultiple: FC<Props> = ({ lines, config }) => {
-  if (lines[0]?.data.length === 0) {
+const remoteDuplicates = (arr: Props["lines"][number]["data"]) => {
+  const seen = new Set();
+  return arr.filter((item) => {
+    const key = item.value;
+    if (seen.has(key)) {
+      return false;
+    }
+    seen.add(key);
+    return true;
+  });
+};
+
+export const LineChartMultiple: FC<Props> = ({ lines: rawLines, config }) => {
+  if (rawLines[0]?.data.length === 0) {
     return null;
   }
+
+  const lines = rawLines.map((line) => ({
+    ...line,
+    data: remoteDuplicates(line.data),
+  }));
 
   const allKeys = lines.flatMap((l) => l.data.map((d) => d.key));
   const minKey = Math.min(...allKeys);
