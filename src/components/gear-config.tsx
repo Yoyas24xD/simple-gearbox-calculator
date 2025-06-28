@@ -22,7 +22,7 @@ export const GearConfig = () => {
           />
         </div>
         {gears.map((gear, index) => (
-          <div key={gear}>
+          <div key={index}>
             <label htmlFor={`gear-${index}`}>Gear {index + 1}:</label>
             <Input
               id={`gear-${index}`}
