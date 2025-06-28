@@ -7,6 +7,17 @@ interface Props {
   data: { hp: number; rpm: number; torque: number }[];
 }
 
+const GEARS_COLORS = [
+  "#4a90e2", // blue
+  "#e94e77", // pink
+  "#50e3c2", // teal
+  "#f5a623", // orange
+  "#b8e986", // light green
+  "#9013fe", // purple
+  "#f8e71c", // yellow
+  "#7ed321", // green
+];
+
 export const GearsPlot: FC<Props> = ({ data }) => {
   const { gears, wheelCircumference, finalDrive } = useGears();
   const maxHp = Math.max(...data.map((d) => d.hp));
@@ -24,7 +35,7 @@ export const GearsPlot: FC<Props> = ({ data }) => {
     }));
     return {
       label: `Gear ${i + 1}`,
-      color: `hsl(${(gear / gears.length) * 360}, 100%, 50%)`,
+      color: GEARS_COLORS[i],
       data: gearData,
     };
   });
@@ -48,11 +59,11 @@ export const GearsPlot: FC<Props> = ({ data }) => {
         ...lines,
         {
           label: "Traction",
-          color: "#e94e77",
+          color: "#F00",
           data: tractionLine,
         },
       ]}
-      config={{ hidePoints: true }}
+      config={{ hidePoints: false }}
     />
   );
 };
