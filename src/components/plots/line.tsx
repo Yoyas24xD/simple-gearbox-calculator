@@ -144,7 +144,7 @@ export const LineChartMultiple: FC<Props> = ({ lines, config }) => {
                       key={`${lineIndex}-${d.key}`}
                       d={`M ${xScale(d.key)} ${yScale(d.value)} l 0.0001 0`}
                       vectorEffect="non-scaling-stroke"
-                      strokeWidth="7"
+                      strokeWidth="5"
                       strokeLinecap="round"
                       fill="none"
                       stroke={line.color}
