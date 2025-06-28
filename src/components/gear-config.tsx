@@ -1,5 +1,9 @@
 import { useGears } from "../hooks/use-gears";
+import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+
+const MAX_GEARS = 8;
+const MIN_GEARS = 5;
 
 export const GearConfig = () => {
   const { gears, finalDrive, setGears, setFinalDrive } = useGears();
@@ -7,6 +11,9 @@ export const GearConfig = () => {
   const handleChange = (value: string, index: number) => {
     setGears((prev) => prev.map((g, i) => (i === index ? Number(value) : g)));
   };
+
+  const handleDelete = (index: number) =>
+    setGears((prev) => prev.filter((_, i) => i !== index));
 
   return (
     <section>
@@ -16,6 +23,7 @@ export const GearConfig = () => {
           <label htmlFor="final-drive">Final Drive Ratio:</label>
           <Input
             id="final-drive"
+            step={0.01}
             type="number"
             value={finalDrive}
             onChange={(e) => setFinalDrive(Number(e.target.value))}
@@ -33,8 +41,21 @@ export const GearConfig = () => {
               min={0}
               max={10}
             />
+            {gears.length > MIN_GEARS && (
+              <Button flavor="danger" onClick={() => handleDelete(index)}>
+                Delete
+              </Button>
+            )}
           </div>
         ))}
+        {gears.length < MAX_GEARS && (
+          <Button
+            flavor="primary"
+            onClick={() => setGears((prev) => [...prev, 0])}
+          >
+            Add Gear
+          </Button>
+        )}
       </div>
     </section>
   );
