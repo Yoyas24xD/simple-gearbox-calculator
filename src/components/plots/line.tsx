@@ -2,189 +2,188 @@ import { curveMonotoneX, line as d3_line, max, scaleLinear } from "d3";
 import type { CSSProperties, FC } from "react";
 
 interface Props {
-  lines: {data:{ key: number; value: number }[]};
+  lines: {
+    label: string;
+    color: string;
+    data: { key: number; value: number }[];
+  }[];
 }
 
-export const LineChartMultiple: FC<Props> = ({ data }) => {
-  if (data.length === 0) {
+export const LineChartMultiple: FC<Props> = ({ lines }) => {
+  if (lines[0]?.data.length === 0) {
     return null;
   }
 
-  const xScale = scaleLinear()
-    .domain([data[0].key, data[data.length - 1].key])
-    .range([0, 100]);
+  const allKeys = lines.flatMap((l) => l.data.map((d) => d.key));
+  const minKey = Math.min(...allKeys);
+  const maxKey = Math.max(...allKeys);
+
+  const xScale = scaleLinear().domain([minKey, maxKey]).range([0, 100]);
 
   const yScale = scaleLinear()
-    .domain([0, max(data.map((d) => d.value)) ?? 0])
+    .domain([0, max(lines.flatMap((l) => l.data.map((d) => d.value))) ?? 0])
     .range([100, 0]);
 
-  const line = d3_line<(typeof data)[number]>()
+  const line = d3_line<Props["lines"][number]["data"][number]>()
     .x((d) => xScale(d.key))
     .y((d) => yScale(d.value))
     .curve(curveMonotoneX);
 
-  const d = line(data);
-  // let d2 = line(data2);
+  const dataLines = lines.map((lineData) => line(lineData.data));
 
-  if (!d) {
+  if (dataLines.some((d) => d === null)) {
     return null;
   }
 
-  const drawXAxis = () => {
-    const numTicks = 20; // Número deseado de etiquetas
-    // Calcular índices equiespaciados
-    let indicesToShow: number[] = [];
-    if (data.length <= numTicks) {
-      indicesToShow = data.map((_, i) => i);
-    } else {
-      indicesToShow = Array.from({ length: numTicks }, (_, i) =>
-        Math.round((i * (data.length - 1)) / (numTicks - 1))
-      );
-    }
-
-    return indicesToShow.map((index) => {
-      const dataPoint = data[index];
-      const isFirst = index === 0;
-      const isLast = index === data.length - 1;
-
-      return (
-        <div key={index} className="overflow-visible text-zinc-500">
-          <div
-            style={{
-              left: `${xScale(dataPoint.key)}%`,
-              top: "100%",
-              transform: `translateX(${
-                isFirst ? "0%" : isLast ? "-100%" : "-50%"
-              })`,
-            }}
-            className="text-xs absolute"
-          >
-            {dataPoint.key}
-          </div>
-        </div>
-      );
-    });
-  };
-
   return (
-    <div
-      className="relative h-72 w-full"
-      style={
-        {
-          "--marginTop": "0px",
-          "--marginRight": "8px",
-          "--marginBottom": "25px",
-          "--marginLeft": "25px",
-        } as CSSProperties
-      }
-    >
-      {/* Y axis */}
-      <div
-        className="absolute inset-0
-          h-[calc(100%-var(--marginTop)-var(--marginBottom))]
-          w-[var(--marginLeft)]
-          translate-y-[var(--marginTop)]
-          overflow-visible
-        "
-      >
-        {yScale.ticks(8).map((value, i) => (
-          <div
-            key={i}
-            style={{
-              top: `${yScale(+value)}%`,
-              left: "0%",
-            }}
-            className="absolute text-xs tabular-nums -translate-y-1/2 text-gray-500 w-full text-right pr-2"
-          >
-            {value}
+    <div className="flex flex-col h-72 w-full">
+      {/* Leyenda - Contenedor superior */}
+      <div className="flex justify-center flex-wrap gap-4 pb-2">
+        {lines.map((lineData, index) => (
+          <div key={index} className="flex items-center gap-2">
+            <div
+              className="w-4 h-1 rounded-full"
+              style={{ backgroundColor: lineData.color }}
+            ></div>
+            <span className="text-xs text-gray-700 dark:text-gray-300">
+              {lineData.label}
+            </span>
           </div>
         ))}
       </div>
 
-      {/* Chart area */}
+      {/* Contenedor del gráfico */}
       <div
-        className="absolute inset-0
-          h-[calc(100%-var(--marginTop)-var(--marginBottom))]
-          w-[calc(100%-var(--marginLeft)-var(--marginRight))]
-          translate-x-[var(--marginLeft)]
-          translate-y-[var(--marginTop)]
-          overflow-visible
-        "
+        className="relative flex-1 w-full"
+        style={
+          {
+            "--marginTop": "0px",
+            "--marginRight": "8px",
+            "--marginBottom": "25px",
+            "--marginLeft": "25px",
+          } as CSSProperties
+        }
       >
-        <svg
-          viewBox="0 0 100 100"
-          className="overflow-visible w-full h-full"
-          preserveAspectRatio="none"
+        {/* Eje Y */}
+        <div
+          className="absolute inset-0
+            h-[calc(100%-var(--marginTop)-var(--marginBottom))]
+            w-[var(--marginLeft)]
+            translate-y-[var(--marginTop)]
+            overflow-visible
+          "
         >
-          {/* Grid lines */}
-          {yScale
-            .ticks(8)
-            .map(yScale.tickFormat(8, "d"))
-            .map((active, i) => (
-              <g
-                transform={`translate(0,${yScale(+active)})`}
-                className="text-zinc-300 dark:text-zinc-700"
-                key={i}
-              >
-                <line
-                  x1={0}
-                  x2={100}
-                  stroke="currentColor"
-                  strokeDasharray="6,5"
-                  strokeWidth={0.5}
-                  vectorEffect="non-scaling-stroke"
-                />
-              </g>
-            ))}
-          {/* Line */}
-          <path
-            d={d}
-            fill="none"
-            className="stroke-violet-400"
-            strokeWidth="2"
-            vectorEffect="non-scaling-stroke"
-          />
-
-          {/* Line 2 */}
-          {/* <path
-            d={d2}
-            fill="none"
-            className="stroke-fuchsia-400"
-            strokeWidth="2"
-            vectorEffect="non-scaling-stroke"
-          /> */}
-
-          {/* Circles 1  */}
-          {data.map((d, index) => (
-            <path
-              key={index}
-              d={`M ${xScale(d.key)} ${yScale(d.value)} l 0.0001 0`}
-              vectorEffect="non-scaling-stroke"
-              strokeWidth="7"
-              strokeLinecap="round"
-              fill="none"
-              stroke="currentColor"
-              className="text-violet-300"
-            />
+          {yScale.ticks(8).map((value, i) => (
+            <div
+              key={i}
+              style={{
+                top: `${yScale(+value)}%`,
+                left: "0%",
+              }}
+              className="absolute text-xs tabular-nums -translate-y-1/2 text-gray-500 w-full text-right pr-2"
+            >
+              {value}
+            </div>
           ))}
-          {/* Circles 2 */}
-          {/* {data2.map((d, index) => (
-            <path
-              key={index}
-              d={`M ${xScale(d.date)} ${yScale(d.value)} l 0.0001 0`}
-              vectorEffect="non-scaling-stroke"
-              strokeWidth="7"
-              strokeLinecap="round"
-              fill="none"
-              stroke="currentColor"
-              className="text-fuchsia-300"
-            />
-          ))} */}
-        </svg>
+        </div>
 
-        <div className="translate-y-2">
-          {/* X Axis */}
-          {drawXAxis()}
+        {/* Área del gráfico */}
+        <div
+          className="absolute inset-0
+            h-[calc(100%-var(--marginTop)-var(--marginBottom))]
+            w-[calc(100%-var(--marginLeft)-var(--marginRight))]
+            translate-x-[var(--marginLeft)]
+            translate-y-[var(--marginTop)]
+            overflow-visible
+          "
+        >
+          <svg
+            viewBox="0 0 100 100"
+            className="overflow-visible w-full h-full"
+            preserveAspectRatio="none"
+          >
+            {/* Líneas de la cuadrícula */}
+            {yScale
+              .ticks(8)
+              .map(yScale.tickFormat(8, "d"))
+              .map((active, i) => (
+                <g
+                  transform={`translate(0,${yScale(+active)})`}
+                  className="text-zinc-300 dark:text-zinc-700"
+                  key={i}
+                >
+                  <line
+                    x1={0}
+                    x2={100}
+                    stroke="currentColor"
+                    strokeDasharray="6,5"
+                    strokeWidth={0.5}
+                    vectorEffect="non-scaling-stroke"
+                  />
+                </g>
+              ))}
+            {/* Líneas del gráfico */}
+            {dataLines.map((d, index) => (
+              <path
+                key={index}
+                d={d!}
+                fill="none"
+                stroke={lines[index].color}
+                strokeWidth="2"
+                vectorEffect="non-scaling-stroke"
+              />
+            ))}
+            {/* Puntos */}
+            {lines.flatMap((line, lineIndex) =>
+              line.data.map((d) => (
+                <path
+                  key={`${lineIndex}-${d.key}`}
+                  d={`M ${xScale(d.key)} ${yScale(d.value)} l 0.0001 0`}
+                  vectorEffect="non-scaling-stroke"
+                  strokeWidth="7"
+                  strokeLinecap="round"
+                  fill="none"
+                  stroke={line.color}
+                />
+              ))
+            )}
+          </svg>
+
+          <div className="translate-y-2">
+            {/* Eje X */}
+            {lines.flatMap((line) =>
+              line.data.map((day, i) => {
+                const isFirst = i === 0;
+                const isLast = i === line.data.length - 1;
+                const isMax =
+                  day.value === Math.max(...line.data.map((d) => d.value));
+                if (!isFirst && !isLast && !isMax) return null;
+                return (
+                  <div
+                    key={day.key + day.value}
+                    className="overflow-visible text-zinc-500"
+                  >
+                    <div
+                      style={{
+                        left: `${xScale(day.key)}%`,
+                        top: "100%",
+                        transform: `translateX(${
+                          i === 0
+                            ? "0%"
+                            : i === line.data.length - 1
+                            ? "-100%"
+                            : "-50%"
+                        })`,
+                      }}
+                      className="text-xs absolute"
+                    >
+                      {day.key}
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -8,7 +8,11 @@ import { useInitialData } from "./hooks/use-initial-data";
 export const App = () => {
   const { data } = useInitialData();
   const hpLine = useHpLine(data);
-
+  // zip data and hpLine
+  const dataWithHp = data.map((point, index) => ({
+    ...point,
+    hp: hpLine[index],
+  }));
   const maxHpTorque = data[hpLine.indexOf(Math.max(...hpLine))];
   console.log(maxHpTorque);
 
@@ -20,10 +24,24 @@ export const App = () => {
         <WheelConfig />
       </section>
       <LineChartMultiple
-        data={data.map((point) => ({
-          key: Math.trunc(point.rpm),
-          value: point.torque,
-        }))}
+        lines={[
+          {
+            label: "torque",
+            color: "#4a90e2",
+            data: data.map((point) => ({
+              key: Math.trunc(point.rpm),
+              value: point.torque,
+            })),
+          },
+          {
+            label: "hp",
+            color: "#e94e77",
+            data: dataWithHp.map((point) => ({
+              key: Math.trunc(point.rpm),
+              value: point.hp,
+            })),
+          },
+        ]}
       />
     </main>
   );
