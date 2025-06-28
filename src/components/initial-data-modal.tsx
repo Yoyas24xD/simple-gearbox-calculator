@@ -2,6 +2,7 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useInitialData } from "../hooks/use-initial-data";
 import { toast } from "sonner";
+import { Button } from "./ui/button";
 
 const parseCsv = (csv: string): { rpm: number; torque: number }[] => {
   return csv
@@ -26,13 +27,12 @@ export const InitialDataModal = () => {
     <section className="absolute top-1/2 left-1/2 -translate-1/2 rounded-sm shadow bg-zinc-800 px-4 py-2 w-1/2">
       <h3>Enter the extracted RPM + torque</h3>
       <textarea
-        className="w-full h-full"
+        className="w-full h-full border border-zinc-600 text-white p-2 rounded outline-none"
         rows={10}
         value={csv}
         onChange={(e) => setCsv(e.target.value)}
       />
-      <button
-        className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
+      <Button
         onClick={() => {
           const parsedData = parseCsv(csv);
           setData(parsedData);
@@ -42,7 +42,7 @@ export const InitialDataModal = () => {
         }}
       >
         Load Csv
-      </button>
+      </Button>
     </section>,
     document.body
   );
