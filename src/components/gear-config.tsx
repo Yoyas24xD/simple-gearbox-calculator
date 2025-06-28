@@ -1,4 +1,5 @@
 import { useGears } from "../hooks/use-gears";
+import { Input } from "./ui/input";
 
 export const GearConfig = () => {
   const { gears, finalDrive, setGears, setFinalDrive } = useGears();
@@ -12,7 +13,7 @@ export const GearConfig = () => {
       <h2>Gear Configuration</h2>
       <div>
         <label htmlFor="final-drive">Final Drive Ratio:</label>
-        <input
+        <Input
           id="final-drive"
           type="number"
           value={finalDrive}
@@ -24,8 +25,7 @@ export const GearConfig = () => {
         {gears.map((gear, index) => (
           <div key={index}>
             <label htmlFor={`gear-${index}`}>Gear {index + 1}:</label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline"
+            <Input
               id={`gear-${index}`}
               type="number"
               value={gear} // TODO: fix this, always shows 0

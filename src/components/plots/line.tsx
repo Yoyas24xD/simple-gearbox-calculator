@@ -7,9 +7,12 @@ interface Props {
     color: string;
     data: { key: number; value: number }[];
   }[];
+  config?: {
+    hidePoints?: boolean;
+  };
 }
 
-export const LineChartMultiple: FC<Props> = ({ lines }) => {
+export const LineChartMultiple: FC<Props> = ({ lines, config }) => {
   if (lines[0]?.data.length === 0) {
     return null;
   }
@@ -134,38 +137,40 @@ export const LineChartMultiple: FC<Props> = ({ lines }) => {
               />
             ))}
             {/* Puntos */}
-            {lines.flatMap((line, lineIndex) =>
-              line.data.map((d) => (
-                <path
-                  key={`${lineIndex}-${d.key}`}
-                  d={`M ${xScale(d.key)} ${yScale(d.value)} l 0.0001 0`}
-                  vectorEffect="non-scaling-stroke"
-                  strokeWidth="7"
-                  strokeLinecap="round"
-                  fill="none"
-                  stroke={line.color}
-                />
-              ))
-            )}
+            {!config?.hidePoints
+              ? lines.flatMap((line, lineIndex) =>
+                  line.data.map((d) => (
+                    <path
+                      key={`${lineIndex}-${d.key}`}
+                      d={`M ${xScale(d.key)} ${yScale(d.value)} l 0.0001 0`}
+                      vectorEffect="non-scaling-stroke"
+                      strokeWidth="7"
+                      strokeLinecap="round"
+                      fill="none"
+                      stroke={line.color}
+                    />
+                  ))
+                )
+              : null}
           </svg>
 
           <div className="translate-y-2">
             {/* Eje X */}
             {lines.flatMap((line) =>
-              line.data.map((day, i) => {
+              line.data.map((point, i) => {
                 const isFirst = i === 0;
                 const isLast = i === line.data.length - 1;
                 const isMax =
-                  day.value === Math.max(...line.data.map((d) => d.value));
+                  point.value === Math.max(...line.data.map((d) => d.value));
                 if (!isFirst && !isLast && !isMax) return null;
                 return (
                   <div
-                    key={day.key + day.value}
+                    key={point.value + line.label}
                     className="overflow-visible text-zinc-500"
                   >
                     <div
                       style={{
-                        left: `${xScale(day.key)}%`,
+                        left: `${xScale(point.key)}%`,
                         top: "100%",
                         transform: `translateX(${
                           i === 0
@@ -177,7 +182,7 @@ export const LineChartMultiple: FC<Props> = ({ lines }) => {
                       }}
                       className="text-xs absolute"
                     >
-                      {day.key}
+                      {point.key}
                     </div>
                   </div>
                 );

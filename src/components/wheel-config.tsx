@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useGears } from "../hooks/use-gears";
+import { Input } from "./ui/input";
+import { Checkbox } from "./ui/checkbox";
 
 interface WheelConfigState {
   width: number;
@@ -12,7 +14,7 @@ export const WheelConfig = () => {
   const { wheelCircumference, setWheelCircumference } = useGears();
   const [state, setState] = useState<WheelConfigState>({
     width: 305,
-    profile: 0.30,
+    profile: 0.3,
     rimDiameter: 17,
     isAwd: false,
   });
@@ -48,7 +50,7 @@ export const WheelConfig = () => {
       <h2>Wheel Configuration</h2>
       <div>
         <label htmlFor="wheel-width">Wheel width:</label>
-        <input
+        <Input
           id="wheel-width"
           type="number"
           value={state.width}
@@ -57,7 +59,7 @@ export const WheelConfig = () => {
       </div>
       <div>
         <label htmlFor="wheel-profile">Wheel profile:</label>
-        <input
+        <Input
           id="wheel-profile"
           type="number"
           value={state.profile}
@@ -66,24 +68,24 @@ export const WheelConfig = () => {
       </div>
       <div>
         <label htmlFor="rim-diameter">Rim diameter:</label>
-        <input
+        <Input
           id="rim-diameter"
           type="number"
           value={state.rimDiameter}
           onChange={createInputHandler("rimDiameter")}
         />
       </div>
-      <div>
-        <label htmlFor="is-awd">Is AWD:</label>
-        <input
-          id="is-awd"
-          type="checkbox"
+      <div className="flex gap-1 align-center">
+        <span>Is AWD: </span>
+        <Checkbox
           checked={state.isAwd}
           onChange={createInputHandler("isAwd")}
         />
       </div>
       <div>
-        <p>Wheel Circumference: {wheelCircumference.toFixed(2)} mm</p>
+        <p>
+          Wheel Circumference: <span className="text-amber-400">{wheelCircumference.toFixed(2)}</span> mm
+        </p>
       </div>
     </section>
   );

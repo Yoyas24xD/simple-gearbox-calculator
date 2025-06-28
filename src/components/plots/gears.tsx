@@ -41,13 +41,18 @@ export const GearsPlot: FC<Props> = ({ data }) => {
       value: maxHpTorque.torque * gear * finalDrive,
     };
   });
-  console.log("tractionLine", tractionLine);
 
-  lines.push({
-    label: "Traction",
-    color: "#e94e77",
-    data: tractionLine,
-  });
-
-  return <LineChartMultiple lines={lines} />;
+  return (
+    <LineChartMultiple
+      lines={[
+        ...lines,
+        {
+          label: "Traction",
+          color: "#e94e77",
+          data: tractionLine,
+        },
+      ]}
+      config={{ hidePoints: true }}
+    />
+  );
 };
