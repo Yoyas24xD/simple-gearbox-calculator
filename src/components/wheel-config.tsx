@@ -48,44 +48,50 @@ export const WheelConfig = () => {
   return (
     <section>
       <h2>Wheel Configuration</h2>
-      <div>
-        <label htmlFor="wheel-width">Wheel width:</label>
-        <Input
-          id="wheel-width"
-          type="number"
-          value={state.width}
-          onChange={createInputHandler("width")}
-        />
-      </div>
-      <div>
-        <label htmlFor="wheel-profile">Wheel profile:</label>
-        <Input
-          id="wheel-profile"
-          type="number"
-          value={state.profile}
-          onChange={createInputHandler("profile")}
-        />
-      </div>
-      <div>
-        <label htmlFor="rim-diameter">Rim diameter:</label>
-        <Input
-          id="rim-diameter"
-          type="number"
-          value={state.rimDiameter}
-          onChange={createInputHandler("rimDiameter")}
-        />
-      </div>
-      <div className="flex gap-1 align-center">
-        <span>Is AWD: </span>
-        <Checkbox
-          checked={state.isAwd}
-          onChange={createInputHandler("isAwd")}
-        />
-      </div>
-      <div>
-        <p>
-          Wheel Circumference: <span className="text-amber-400">{wheelCircumference.toFixed(2)}</span> mm
-        </p>
+      <div className="flex gap-2 items-center">
+        <div>
+          <label htmlFor="wheel-width">Wheel width:</label>
+          <Input
+            id="wheel-width"
+            type="number"
+            value={state.width}
+            onChange={createInputHandler("width")}
+          />
+        </div>
+        <div>
+          <label htmlFor="wheel-profile">Wheel profile:</label>
+          <Input
+            id="wheel-profile"
+            type="number"
+            value={state.profile}
+            onChange={createInputHandler("profile")}
+          />
+        </div>
+        <div>
+          <label htmlFor="rim-diameter">Rim diameter:</label>
+          <Input
+            id="rim-diameter"
+            type="number"
+            value={state.rimDiameter}
+            onChange={createInputHandler("rimDiameter")}
+          />
+        </div>
+        <div className="flex gap-1 items-center">
+          <span>Is AWD: </span>
+          <Checkbox
+            checked={state.isAwd}
+            onChange={createInputHandler("isAwd")}
+          />
+        </div>
+        <div>
+          <p>
+            Wheel Circumference:{" "}
+            <span className="text-amber-400">
+              {wheelCircumference.toFixed(2)}
+            </span>{" "}
+            mm
+          </p>
+        </div>
       </div>
     </section>
   );

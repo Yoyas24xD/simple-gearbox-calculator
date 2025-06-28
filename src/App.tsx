@@ -16,12 +16,10 @@ export const App = () => {
   }));
 
   return (
-    <main>
+    <main className="p-2">
       <InitialDataModal />
-      <section className="flex gap-20 p-4 justify-center">
-        <GearConfig />
-        <WheelConfig />
-      </section>
+      <GearConfig />
+      <WheelConfig />
       <LineChartMultiple
         lines={[
           {
