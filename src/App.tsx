@@ -15,9 +15,19 @@ export const App = () => {
     hp: hpLine[index],
   }));
 
+  if (data.length === 0) {
+    return (
+      <main className="p-2">
+        <InitialDataModal />
+        <div className="text-center text-gray-500">
+          Please enter RPM and torque data to start.
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="p-2">
-      <InitialDataModal />
       <GearConfig />
       <WheelConfig />
       <LineChartMultiple
