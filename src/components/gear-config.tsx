@@ -22,7 +22,7 @@ export const GearConfig = () => {
   return (
     <section>
       <h2>Gear Configuration</h2>
-      <div className="flex gap-2">
+      <div className="flex gap-2 items-end">
         <div className="w-[10ch]">
           <label htmlFor="final-drive" className="whitespace-nowrap">
             Final Drive:
@@ -57,10 +57,11 @@ export const GearConfig = () => {
         ))}
         {gears.length < MAX_GEARS && (
           <Button
-            flavor="primary"
+            className="h-fit"
+            flavor="success"
             onClick={() => setGears((prev) => [...prev, 0])}
           >
-            Add Gear
+            <img src={Cross} alt="Add Gear" className="w-8 rotate-45" />
           </Button>
         )}
       </div>
