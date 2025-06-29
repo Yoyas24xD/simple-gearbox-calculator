@@ -2,14 +2,17 @@ import { useGears } from "../hooks/use-gears";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import Cross from "../assets/cross.svg";
+import { useRef } from "react";
 
 const MAX_GEARS = 8;
 const MIN_GEARS = 5;
 
 export const GearConfig = () => {
   const { gears, finalDrive, setGears, setFinalDrive } = useGears();
+  const lastValue = useRef<string>("");
 
   const handleChange = (value: string, index: number) => {
+    lastValue.current = value;
     setGears((prev) => prev.map((g, i) => (i === index ? Number(value) : g)));
   };
 
@@ -20,8 +23,10 @@ export const GearConfig = () => {
     <section>
       <h2>Gear Configuration</h2>
       <div className="flex gap-2">
-        <div className="w-40">
-          <label htmlFor="final-drive">Final Drive:</label>
+        <div className="w-[10ch]">
+          <label htmlFor="final-drive" className="whitespace-nowrap">
+            Final Drive:
+          </label>
           <Input
             id="final-drive"
             step={0.01}
@@ -36,7 +41,7 @@ export const GearConfig = () => {
             <div id={`gear-${index}`} className="flex items-center gap-1">
               <Input
                 type="number"
-                value={gear}
+                value={gear === 0 && lastValue.current !== "0" ? "" : gear}
                 step="0.01"
                 onChange={(e) => handleChange(e.target.value, index)}
                 min={0}
