@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGears } from "../hooks/use-gears";
 import { Input } from "./ui/input";
 import { Checkbox } from "./ui/checkbox";
@@ -18,6 +18,14 @@ export const WheelConfig = () => {
     rimDiameter: 17,
     isAwd: false,
   });
+
+  useEffect(() => {
+    const { width, profile, rimDiameter } = state;
+    setWheelCircumference(
+      Math.PI *
+        (rimDiameter + ((width * profile) / 25.4) * (state.isAwd ? 4 : 2))
+    );
+  }, []);
 
   const handleChange = (
     field: keyof WheelConfigState,
@@ -49,7 +57,7 @@ export const WheelConfig = () => {
     <section>
       <h2>Wheel Configuration</h2>
       <div className="flex gap-2 items-center">
-        <div>
+        <div className="w-[12ch]">
           <label htmlFor="wheel-width">Wheel width:</label>
           <Input
             id="wheel-width"
@@ -58,16 +66,19 @@ export const WheelConfig = () => {
             onChange={createInputHandler("width")}
           />
         </div>
-        <div>
+        <div className="w-[12ch]">
           <label htmlFor="wheel-profile">Wheel profile:</label>
           <Input
             id="wheel-profile"
             type="number"
             value={state.profile}
             onChange={createInputHandler("profile")}
+            max={1}
+            min={0}
+            step={0.01}
           />
         </div>
-        <div>
+        <div className="w-[12ch]">
           <label htmlFor="rim-diameter">Rim diameter:</label>
           <Input
             id="rim-diameter"
