@@ -5,6 +5,7 @@ import { computeSpeedFromRpm } from "../../hooks/use-gear-speed";
 
 interface Props {
   data: { hp: number; rpm: number; torque: number }[];
+  className?: string;
 }
 
 const GEARS_COLORS = [
@@ -18,7 +19,7 @@ const GEARS_COLORS = [
   "#7ed321", // green
 ];
 
-export const GearsPlot: FC<Props> = ({ data }) => {
+export const GearsPlot: FC<Props> = ({ data, className }) => {
   const { gears, wheelCircumference, finalDrive } = useGears();
   const maxHp = Math.max(...data.map((d) => d.hp));
   const maxHpTorque = data.find((d) => d.hp === maxHp);
@@ -55,6 +56,7 @@ export const GearsPlot: FC<Props> = ({ data }) => {
 
   return (
     <LineChartMultiple
+      className={className}
       lines={[
         ...lines,
         {
@@ -63,7 +65,7 @@ export const GearsPlot: FC<Props> = ({ data }) => {
           data: tractionLine,
         },
       ]}
-      config={{ hidePoints: false }}
+      xTickStep={10}
     />
   );
 };

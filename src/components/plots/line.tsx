@@ -2,14 +2,14 @@ import { curveMonotoneX, line as d3_line, max, scaleLinear } from "d3";
 import type { CSSProperties, FC } from "react";
 
 interface Props {
+  className?: string;
   lines: {
     label: string;
     color: string;
     data: { key: number; value: number }[];
   }[];
-  config?: {
-    hidePoints?: boolean;
-  };
+  hidePoints?: boolean;
+  xTickStep?: number;
 }
 
 const remoteDuplicates = (arr: Props["lines"][number]["data"]) => {
@@ -24,7 +24,12 @@ const remoteDuplicates = (arr: Props["lines"][number]["data"]) => {
   });
 };
 
-export const LineChartMultiple: FC<Props> = ({ lines: rawLines, config }) => {
+export const LineChartMultiple: FC<Props> = ({
+  lines: rawLines,
+  className,
+  hidePoints,
+  xTickStep = 50,
+}) => {
   if (rawLines[0]?.data.length === 0) {
     return null;
   }
@@ -55,8 +60,14 @@ export const LineChartMultiple: FC<Props> = ({ lines: rawLines, config }) => {
     return null;
   }
 
+  const xTicks = xScale
+    .ticks(Math.ceil((maxKey - minKey) / xTickStep)) // Calcular el número de ticks basado en el paso
+    .filter(
+      (tick) => tick % xTickStep === 0 || tick === minKey || tick === maxKey
+    ); // Asegurar que los ticks sean múltiplos del paso o los extremos
+
   return (
-    <div className="flex flex-col h-72 w-full">
+    <div className={`flex flex-col min-h-72 w-full ${className ?? ""}`}>
       {/* Leyenda - Contenedor superior */}
       <div className="flex justify-center flex-wrap gap-4 pb-2">
         {lines.map((lineData, index) => (
@@ -154,7 +165,7 @@ export const LineChartMultiple: FC<Props> = ({ lines: rawLines, config }) => {
               />
             ))}
             {/* Puntos */}
-            {!config?.hidePoints
+            {!hidePoints
               ? lines.flatMap((line, lineIndex) =>
                   line.data.map((d) => (
                     <path
@@ -171,40 +182,20 @@ export const LineChartMultiple: FC<Props> = ({ lines: rawLines, config }) => {
               : null}
           </svg>
 
+          {/* Eje X */}
           <div className="translate-y-2">
-            {/* Eje X */}
-            {lines.flatMap((line) =>
-              line.data.map((point, i) => {
-                const isFirst = i === 0;
-                const isLast = i === line.data.length - 1;
-                const isMax =
-                  point.value === Math.max(...line.data.map((d) => d.value));
-                if (!isFirst && !isLast && !isMax) return null;
-                return (
-                  <div
-                    key={point.value + line.label}
-                    className="overflow-visible text-zinc-500"
-                  >
-                    <div
-                      style={{
-                        left: `${xScale(point.key)}%`,
-                        top: "100%",
-                        transform: `translateX(${
-                          i === 0
-                            ? "0%"
-                            : i === line.data.length - 1
-                            ? "-100%"
-                            : "-50%"
-                        })`,
-                      }}
-                      className="text-xs absolute"
-                    >
-                      {point.key}
-                    </div>
-                  </div>
-                );
-              })
-            )}
+            {xTicks.map((value, i) => (
+              <div
+                key={i}
+                className="absolute text-xs tabular-nums -translate-x-1/2 text-gray-500"
+                style={{
+                  left: `${xScale(value)}%`,
+                  top: "100%",
+                }}
+              >
+                {value}
+              </div>
+            ))}
           </div>
         </div>
       </div>

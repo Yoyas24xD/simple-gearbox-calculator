@@ -49,8 +49,9 @@ export const App = () => {
             })),
           },
         ]}
+        xTickStep={125}
       />
-      <GearsPlot data={dataWithHp} />
+      <GearsPlot className="h-100" data={dataWithHp} />
     </main>
   );
 };
