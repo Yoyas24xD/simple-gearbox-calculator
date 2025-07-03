@@ -3,7 +3,7 @@
 ### ⚠️ Important Note: Early Development ⚠️
 Please be aware that this project is currently in its early development stages. This means you might encounter bugs, incomplete features, or frequent updates. We appreciate your patience and feedback as we continue to improve it!
 
-This tool helps you understand how a gearbox works by calculating its output speed and torque. It's based on the concepts explained in the video ["How to adjust gear ratios"](https://www.youtube.com/watch?v=8_SaobHPhWs&t=805s) by [stepunique](https://coff.ee/stepunique).
+This tool helps you understand how a gearbox works by calculating its output speed and torque. It's based on the concepts explained in the video ["How to adjust gear ratios"](https://www.youtube.com/watch?v=8_SaobHPhWs) by [stepunique](https://coff.ee/stepunique).
 
 # What is a Gearbox Calculator?
 
@@ -21,7 +21,7 @@ You will provide the initial speed and torque from your engine, and the calculat
 
 # How to Use the Tool
 
-Visit the Project Page: Go to the GitHub page for this project. You can find it [here](...).
+Visit the Project Page: Go to the GitHub page for this project. You can find it [here](https://yoyas24xd.github.io/simple-gearbox-calculator/).
 
 Prepare Your Engine Data: You'll need to provide your engine's speed (RPM) and torque values. These values should be in a specific format called CSV (Comma Separated Values).
 
