@@ -1,34 +1,35 @@
 import type { StorageStrategy } from "./strategy";
 
-export class IndexedDBStrategy implements StorageStrategy {
-  private dbName = "browserStorageDB";
-  private storeName = "keyValueStore";
+export class IndexedDBStrategy<T> implements StorageStrategy<T> {
+  private readonly dbName = "browserStorageDB";
+  private readonly storeName = "keyValueStore";
   private db: IDBDatabase | null = null;
 
   constructor() {
     this.initializeDB();
   }
 
-  private async initializeDB(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName, 1);
+  private initializeDB(): void {
+    const request = indexedDB.open(this.dbName, 1);
 
-      request.onupgradeneeded = (event) => {
-        const db = (event.target as IDBOpenDBRequest).result;
-        if (!db.objectStoreNames.contains(this.storeName)) {
-          db.createObjectStore(this.storeName);
-        }
-      };
+    request.onupgradeneeded = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      if (!db.objectStoreNames.contains(this.storeName)) {
+        db.createObjectStore(this.storeName);
+      }
+    };
 
-      request.onsuccess = (event) => {
-        this.db = (event.target as IDBOpenDBRequest).result;
-        resolve();
-      };
+    request.onsuccess = (event) => {
+      this.db = (event.target as IDBOpenDBRequest).result;
+    };
 
-      request.onerror = (event) => {
-        reject((event.target as IDBOpenDBRequest).error);
-      };
-    });
+    request.onerror = (event) => {
+      console.error(
+        "IndexedDB initialization failed:",
+        (event.target as IDBOpenDBRequest).error
+      );
+      throw new Error("Failed to initialize IndexedDB");
+    };
   }
 
   private getObjectStore(mode: IDBTransactionMode): IDBObjectStore {
@@ -37,33 +38,43 @@ export class IndexedDBStrategy implements StorageStrategy {
     return transaction.objectStore(this.storeName);
   }
 
-  async save(key: string, value: unknown): Promise<void> {
-    await this.initializeDB();
-    return new Promise((resolve, reject) => {
-      const store = this.getObjectStore("readwrite");
-      const request = store.put(value, key);
+  save(key: string, value: T): void {
+    this.initializeDB();
+    const store = this.getObjectStore("readwrite");
+    const request = store.put(value, key);
 
-      request.onsuccess = () => {
-        resolve();
-      };
+    request.onsuccess = () => {
+      console.log(`Value saved with key: ${key}`);
+    };
 
-      request.onerror = () => reject(request.error);
-    });
+    request.onerror = () => {
+      console.error(`Failed to save value with key: ${key}`, request.error);
+      throw request.error;
+    };
   }
 
-  async load(key: string): Promise<unknown | null> {
-    await this.initializeDB();
-    return new Promise((resolve, reject) => {
-      const store = this.getObjectStore("readonly");
-      const request = store.get(key);
+  load(key: string): T | null {
+    this.initializeDB();
+    const store = this.getObjectStore("readonly");
+    const request = store.get(key);
 
-      request.onsuccess = () => resolve(request.result || null);
-      request.onerror = () => reject(request.error);
-    });
+    request.onsuccess = () => {
+      if (request.result === undefined) {
+        console.warn(`No value found for key: ${key}`);
+        return null;
+      }
+      return request.result as T;
+    };
+
+    request.onerror = () => {
+      console.error(`Failed to load value with key: ${key}`, request.error);
+      throw request.error;
+    };
+    return null; // Return null immediately, actual value will be handled in onsuccess
   }
 
   async remove(key: string): Promise<void> {
-    await this.initializeDB();
+    this.initializeDB();
     return new Promise((resolve, reject) => {
       const store = this.getObjectStore("readwrite");
       const request = store.delete(key);
@@ -77,7 +88,7 @@ export class IndexedDBStrategy implements StorageStrategy {
   }
 
   async clear(): Promise<void> {
-    await this.initializeDB();
+    this.initializeDB();
     return new Promise((resolve, reject) => {
       const store = this.getObjectStore("readwrite");
       const request = store.clear();
