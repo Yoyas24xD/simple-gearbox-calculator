@@ -2,6 +2,7 @@ import type { FC } from "react";
 import { useGears } from "../../hooks/use-gears";
 import { LineChartMultiple } from "./line";
 import { computeSpeedFromRpm } from "../../hooks/use-gear-speed";
+import { useGlobalConfig } from "../../hooks/use-global-config";
 
 interface Props {
   data: { hp: number; rpm: number; torque: number }[];
@@ -20,6 +21,7 @@ const GEARS_COLORS = [
 ];
 
 export const GearsPlot: FC<Props> = ({ data, className }) => {
+  const { state: globalConfig } = useGlobalConfig();
   const { gears, wheelCircumference, finalDrive } = useGears();
   const maxHp = Math.max(...data.map((d) => d.hp));
   const maxHpTorque = data.find((d) => d.hp === maxHp);
@@ -66,6 +68,7 @@ export const GearsPlot: FC<Props> = ({ data, className }) => {
         },
       ]}
       xTickStep={10}
+      hidePoints={!globalConfig.gearsGraph.showPoints}
     />
   );
 };

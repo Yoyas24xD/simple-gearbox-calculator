@@ -1,8 +1,8 @@
+import { useRef } from "react";
+import Cross from "../assets/cross.svg";
 import { useGears } from "../hooks/use-gears";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import Cross from "../assets/cross.svg";
-import { useRef } from "react";
 
 const MAX_GEARS = 8;
 const MIN_GEARS = 5;
