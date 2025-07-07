@@ -1,9 +1,25 @@
 import { useMemo, useReducer, type ReactNode } from "react";
+import { useDebounce } from "../hooks/use-debounce";
 import {
   GlobalConfigContext,
   type Action,
   type GlobalConfig,
 } from "../hooks/use-global-config";
+import { useLocalStorage } from "../hooks/use-storage";
+
+const DEFAULT_CONFIG = {
+  hpTorqueGraph: {
+    height: 300,
+    show: true,
+    showPoints: true,
+  },
+  gearsGraph: {
+    height: 300,
+    show: true,
+    showPoints: true,
+  },
+  gearCount: 6,
+};
 
 const reducer = (state: GlobalConfig, action: Action) => {
   switch (action.type) {
@@ -27,24 +43,20 @@ const reducer = (state: GlobalConfig, action: Action) => {
   }
 };
 
-const saveToLocalStorage = (state: GlobalConfig) => {
-  localStorage.setItem("globalConfig", JSON.stringify(state));
-};
-
 export const GlobalConfigProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(reducer, {
-    hpTorqueGraph: {
-      height: 300,
-      show: true,
-      showPoints: true,
+  const storage = useLocalStorage<GlobalConfig>("config");
+  const debouncedSave = useDebounce(
+    (config: GlobalConfig) => storage.save(config),
+    500
+  );
+  const [state, dispatch] = useReducer(
+    (state: GlobalConfig, action: Action) => {
+      const newState = reducer(state, action);
+      debouncedSave(newState);
+      return newState;
     },
-    gearsGraph: {
-      height: 300,
-      show: true,
-      showPoints: true,
-    },
-    gearCount: 6,
-  });
+    storage.value ?? DEFAULT_CONFIG
+  );
 
   const value = useMemo(() => ({ state, dispatch }), [state, dispatch]);
 

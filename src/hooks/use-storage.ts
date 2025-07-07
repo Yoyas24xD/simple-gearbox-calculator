@@ -4,6 +4,7 @@ import type {
   StorageChangeHandler,
   StorageStrategy,
 } from "../storage/strategy";
+import { toast } from "sonner";
 
 const useBrowserStorage = <T = unknown>(
   key: string,
@@ -47,29 +48,44 @@ const useBrowserStorage = <T = unknown>(
 
   const save = useCallback(
     async (newValue: T) => {
-      try {
-        setIsLoading(true);
-        await storage.save(key, newValue);
-        setValue(newValue);
-        setError(null);
-      } catch (err) {
-        setError(err as Error);
-      }
-      setIsLoading(false);
+      setIsLoading(true);
+      toast.promise(storage.save(key, newValue), {
+        loading: "Saving...",
+        success: () => {
+          setValue(newValue);
+          setError(null);
+          setIsLoading(false);
+          return `Saved successfully: ${key}`;
+        },
+        error: (err) => {
+          setError(err as Error);
+          return `Error saving: ${
+            err instanceof Error ? err.message : "Unknown error"
+          }`;
+        },
+      });
     },
     [key, storage]
   );
 
   const remove = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      await storage.remove(key);
-      setValue(null);
-      setError(null);
-    } catch (err) {
-      setError(err as Error);
-    }
-    setIsLoading(false);
+    setIsLoading(true);
+    toast.promise(storage.remove(key), {
+      loading: "Removing...",
+      success: () => {
+        setValue(null);
+        setError(null);
+        setIsLoading(false);
+        return `Removed successfully: ${key}`;
+      },
+      error: (err) => {
+        setError(err as Error);
+        setIsLoading(false);
+        return `Error removing: ${
+          err instanceof Error ? err.message : "Unknown error"
+        }`;
+      },
+    });
   }, [key, storage]);
 
   const clear = useCallback(async () => {
