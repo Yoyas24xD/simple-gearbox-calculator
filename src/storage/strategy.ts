@@ -1,4 +1,4 @@
-export type StorageEventType = "save" | "load" | "remove" | "clear";
+export type StorageEventType = "save" | "remove" | "clear";
 
 export type StorageChangeHandler<T> = (
   key: string,
@@ -7,9 +7,9 @@ export type StorageChangeHandler<T> = (
 ) => void;
 
 export interface StorageStrategy<T = unknown> {
-  save(key: string, value: T): void;
-  load(key: string): T | null;
-  remove(key: string): void;
-  clear(): void;
-  // addChangeListener(handler: StorageChangeHandler<T>): () => void;
+  save(key: string, value: T): Promise<void>;
+  load(key: string): Promise<T | null>;
+  remove(key: string): Promise<void>;
+  clear(): Promise<void>;
+  addChangeListener(handler: StorageChangeHandler<T>): () => void;
 }
