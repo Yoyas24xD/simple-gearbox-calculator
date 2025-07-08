@@ -47,7 +47,7 @@ export const GlobalConfigProvider = ({ children }: { children: ReactNode }) => {
   const storage = useLocalStorage<GlobalConfig>("config");
   const debouncedSave = useDebounce(
     (config: GlobalConfig) => storage.save(config),
-    500
+    1000
   );
   const [state, dispatch] = useReducer(
     (state: GlobalConfig, action: Action) => {
