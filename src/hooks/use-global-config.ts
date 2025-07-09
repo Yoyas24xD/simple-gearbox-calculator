@@ -13,12 +13,13 @@ export interface GlobalConfig {
 }
 
 export type Action =
-  | { type: "SET_HP_TORQUE_GRAPH"; payload: GraphConfig }
-  | { type: "SET_GEARS_GRAPH"; payload: GraphConfig }
-  | { type: "SET_GEAR_COUNT"; payload: number };
+  | { type: "SET_HP_TORQUE_GRAPH"; payload: GraphConfig; skipSave?: boolean }
+  | { type: "SET_GEARS_GRAPH"; payload: GraphConfig; skipSave?: boolean }
+  | { type: "SET_GEAR_COUNT"; payload: number; skipSave?: boolean }
+  | { type: "SET_ALL"; payload: GlobalConfig; skipSave?: boolean };
 
 export const GlobalConfigContext = createContext<{
-  state: GlobalConfig;
+  config: GlobalConfig;
   dispatch: Dispatch<Action>;
 } | null>(null);
 

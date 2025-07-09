@@ -6,13 +6,16 @@ import { Checkbox } from "./ui/checkbox";
 import { useGlobalConfig } from "../hooks/use-global-config";
 import { Input } from "./ui/input";
 
+const MAX_GEARS = 8;
+const MIN_GEARS = 5;
+
 interface Props {
   open: boolean;
   onClose: () => void;
 }
 
 export const GlobalConfig: FC<Props> = ({ open, onClose }) => {
-  const { state, dispatch } = useGlobalConfig();
+  const { config: state, dispatch } = useGlobalConfig();
 
   if (!open) {
     return null;
@@ -51,6 +54,27 @@ export const GlobalConfig: FC<Props> = ({ open, onClose }) => {
             })
           }
         />
+        <div>
+          <label htmlFor="hp-height">Heigth</label>
+          <Input
+            id="hp-height"
+            type="number"
+            value={state.hpTorqueGraph.height}
+            step={10}
+            min={100}
+            max={1000}
+            onChange={(e) =>
+              dispatch({
+                type: "SET_HP_TORQUE_GRAPH",
+                payload: {
+                  ...state.hpTorqueGraph,
+                  height: parseInt(e.target.value, 10) || 300,
+                },
+              })
+            }
+            placeholder="Enter graph height"
+          />
+        </div>
       </section>
       <Divider />
       <section>
@@ -81,15 +105,38 @@ export const GlobalConfig: FC<Props> = ({ open, onClose }) => {
             })
           }
         />
+        <div>
+          <label htmlFor="gears-height">Heigth</label>
+          <Input
+            id="gears-height"
+            type="number"
+            value={state.gearsGraph.height}
+            step={10}
+            min={100}
+            max={1000}
+            onChange={(e) =>
+              dispatch({
+                type: "SET_GEARS_GRAPH",
+                payload: {
+                  ...state.gearsGraph,
+                  height: parseInt(e.target.value, 10) || 300,
+                },
+              })
+            }
+            placeholder="Enter graph height"
+          />
+        </div>
       </section>
       <Divider />
       <section>
-        <p>Gear Count [min: 5 - max: 8]</p>
+        <p>
+          Gear Count [min: {MIN_GEARS} - max: {MAX_GEARS}]
+        </p>
         <Input
           type="number"
           value={state.gearCount}
-          min={5}
-          max={8}
+          min={MIN_GEARS}
+          max={MAX_GEARS}
           onChange={(e) =>
             dispatch({
               type: "SET_GEAR_COUNT",

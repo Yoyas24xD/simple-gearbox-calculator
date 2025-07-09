@@ -12,7 +12,7 @@ import { Button } from "./components/ui/button";
 import { useGlobalConfig } from "./hooks/use-global-config";
 
 export const App = () => {
-  const { state: globalConfig } = useGlobalConfig();
+  const { config } = useGlobalConfig();
   const [openConfig, setOpenConfig] = useState(false);
   const { data } = useInitialData();
   const hpLine = useHpLine(data);
@@ -41,8 +41,9 @@ export const App = () => {
       <GlobalConfig open={openConfig} onClose={() => setOpenConfig(false)} />
       <GearConfig />
       <WheelConfig />
-      {globalConfig.hpTorqueGraph.show && (
+      {config.hpTorqueGraph.show && (
         <LineChartMultiple
+          style={{ height: config.hpTorqueGraph.height + "px" }}
           lines={[
             {
               label: "torque",
@@ -62,11 +63,14 @@ export const App = () => {
             },
           ]}
           xTickStep={125}
-          hidePoints={!globalConfig.hpTorqueGraph.showPoints}
+          hidePoints={!config.hpTorqueGraph.showPoints}
         />
       )}
-      {globalConfig.gearsGraph.show && (
-        <GearsPlot className="h-100" data={dataWithHp} />
+      {config.gearsGraph.show && (
+        <GearsPlot
+          style={{ height: config.gearsGraph.height + "px" }}
+          data={dataWithHp}
+        />
       )}
     </main>
   );

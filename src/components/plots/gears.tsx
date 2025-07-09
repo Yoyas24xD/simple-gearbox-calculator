@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import type { CSSProperties, FC } from "react";
 import { useGears } from "../../hooks/use-gears";
 import { LineChartMultiple } from "./line";
 import { computeSpeedFromRpm } from "../../hooks/use-gear-speed";
@@ -7,6 +7,7 @@ import { useGlobalConfig } from "../../hooks/use-global-config";
 interface Props {
   data: { hp: number; rpm: number; torque: number }[];
   className?: string;
+  style?: CSSProperties;
 }
 
 const GEARS_COLORS = [
@@ -20,8 +21,8 @@ const GEARS_COLORS = [
   "#7ed321", // green
 ];
 
-export const GearsPlot: FC<Props> = ({ data, className }) => {
-  const { state: globalConfig } = useGlobalConfig();
+export const GearsPlot: FC<Props> = ({ data, className, style }) => {
+  const { config } = useGlobalConfig();
   const { gears, wheelCircumference, finalDrive } = useGears();
   const maxHp = Math.max(...data.map((d) => d.hp));
   const maxHpTorque = data.find((d) => d.hp === maxHp);
@@ -58,17 +59,22 @@ export const GearsPlot: FC<Props> = ({ data, className }) => {
 
   return (
     <LineChartMultiple
+      style={style}
       className={className}
-      lines={[
-        ...lines,
-        {
-          label: "Traction",
-          color: "#F00",
-          data: tractionLine,
-        },
-      ]}
+      lines={
+        gears.every((g) => g)
+          ? [
+              ...lines,
+              {
+                label: "Traction",
+                color: "#F00",
+                data: tractionLine,
+              },
+            ]
+          : []
+      }
       xTickStep={10}
-      hidePoints={!globalConfig.gearsGraph.showPoints}
+      hidePoints={!config.gearsGraph.showPoints}
     />
   );
 };

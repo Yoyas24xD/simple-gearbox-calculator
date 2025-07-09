@@ -1,4 +1,4 @@
-import { useMemo, useReducer, type ReactNode } from "react";
+import { useEffect, useMemo, useReducer, type ReactNode } from "react";
 import { useDebounce } from "../hooks/use-debounce";
 import {
   GlobalConfigContext,
@@ -38,6 +38,11 @@ const reducer = (state: GlobalConfig, action: Action) => {
         ...state,
         gearCount: action.payload,
       };
+    case "SET_ALL":
+      return {
+        ...state,
+        ...action.payload,
+      };
     default:
       throw new Error(`Unhandled action type: ${(action as Action).type}`);
   }
@@ -52,13 +57,21 @@ export const GlobalConfigProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(
     (state: GlobalConfig, action: Action) => {
       const newState = reducer(state, action);
-      debouncedSave(newState);
+      if (!action.skipSave) {
+        debouncedSave(newState);
+      }
       return newState;
     },
-    storage.value ?? DEFAULT_CONFIG
+    DEFAULT_CONFIG
   );
 
-  const value = useMemo(() => ({ state, dispatch }), [state, dispatch]);
+  useEffect(() => {
+    if (storage.value) {
+      dispatch({ type: "SET_ALL", payload: storage.value, skipSave: true });
+    }
+  }, [storage.value]);
+
+  const value = useMemo(() => ({ config: state, dispatch }), [state, dispatch]);
 
   return (
     <GlobalConfigContext.Provider value={value}>

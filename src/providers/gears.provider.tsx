@@ -1,12 +1,23 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { GearsContext } from "../hooks/use-gears";
+import { useGlobalConfig } from "../hooks/use-global-config";
 
 export const GearsProvider = ({ children }: { children: ReactNode }) => {
-  const [gears, setGears] = useState<number[]>([
-    3.57, 2.82, 2.3, 1.96, 1.7, 1.46, 1.23, 1.11,
-  ]);
+  const { config } = useGlobalConfig();
+  const [gears, setGears] = useState<number[]>(Array(config.gearCount).fill(0));
   const [finalDrive, setFinalDrive] = useState<number>(3.5);
   const [wheelCircumference, setWheelCircumference] = useState<number>(80.0);
+
+  useEffect(() => {
+    setGears((prev) => {
+      if (prev.length < config.gearCount) {
+        return [...prev, ...Array(config.gearCount - prev.length).fill(0)];
+      } else if (prev.length > config.gearCount) {
+        return prev.slice(0, config.gearCount);
+      }
+      return prev;
+    });
+  }, [config.gearCount]);
 
   const value = useMemo(
     () => ({
