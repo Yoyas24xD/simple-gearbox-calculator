@@ -10,6 +10,7 @@ import { useHpLine } from "./hooks/use-hp-line";
 import { useInitialData } from "./hooks/use-initial-data";
 import { Button } from "./components/ui/button";
 import { useGlobalConfig } from "./hooks/use-global-config";
+import { Autocomplete } from "./components/ui/autocomplete";
 
 export const App = () => {
   const { config } = useGlobalConfig();
@@ -35,6 +36,16 @@ export const App = () => {
 
   return (
     <main className="p-2">
+      <Autocomplete
+        // TODO: placeholder array change it
+        items={Array.from({ length: 10 }, (_, i) => ({
+          id: i,
+          value: i.toString(),
+          label: i.toString(),
+        }))}
+        listId="setup"
+        onSelect={() => null}
+      />
       <Button onClick={() => setOpenConfig(true)}>
         <img src={Gear} className="w-6" alt="config" />
       </Button>
