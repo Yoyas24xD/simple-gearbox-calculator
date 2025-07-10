@@ -32,17 +32,27 @@ export const InitialDataModal = () => {
         value={csv}
         onChange={(e) => setCsv(e.target.value)}
       />
-      <Button
-        onClick={() => {
-          const parsedData = parseCsv(csv);
-          setData(parsedData);
-          setCsv(""); // Clear the input after submission
-          setIsOpen(false); // Close the modal after submission
-          toast.success("Data loaded successfully!");
-        }}
-      >
-        Load Csv
-      </Button>
+      <div className="flex gap-4 py-2">
+        <Button
+          onClick={() => {
+            const parsedData = parseCsv(csv);
+            setData(parsedData);
+            setCsv("");
+            setIsOpen(false);
+            toast.success("Data loaded successfully!");
+          }}
+        >
+          Load Csv
+        </Button>
+        <Button
+          flavor="secondary"
+          onClick={() => {
+            console.log("prueba");
+          }}
+        >
+          Load setup
+        </Button>
+      </div>
     </section>,
     document.body
   );
