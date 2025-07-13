@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
-import { useInitialData } from "../hooks/use-initial-data";
 import { toast } from "sonner";
+import { useCarSetup } from "../hooks/use-car-setup";
 import { Button } from "./ui/button";
 
 const parseCsv = (csv: string): { rpm: number; torque: number }[] => {
@@ -19,7 +19,7 @@ const parseCsv = (csv: string): { rpm: number; torque: number }[] => {
 export const InitialDataModal = () => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [csv, setCsv] = useState<string>("");
-  const { setData } = useInitialData();
+  const { setSetup } = useCarSetup();
 
   if (!isOpen) return null;
 
@@ -36,7 +36,10 @@ export const InitialDataModal = () => {
         <Button
           onClick={() => {
             const parsedData = parseCsv(csv);
-            setData(parsedData);
+            setSetup({
+              type: "UPDATE_DATA",
+              data: parsedData,
+            });
             setCsv("");
             setIsOpen(false);
             toast.success("Data loaded successfully!");

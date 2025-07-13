@@ -1,29 +1,29 @@
-import Gear from "./assets/gear.svg";
 import { useState } from "react";
-import { GlobalConfig } from "./components/global-config";
+import Gear from "./assets/gear.svg";
 import { GearConfig } from "./components/gear-config";
+import { GlobalConfig } from "./components/global-config";
 import { InitialDataModal } from "./components/initial-data-modal";
 import { GearsPlot } from "./components/plots/gears";
 import { LineChartMultiple } from "./components/plots/line";
-import { WheelConfig } from "./components/wheel-config";
-import { useHpLine } from "./hooks/use-hp-line";
-import { useInitialData } from "./hooks/use-initial-data";
-import { Button } from "./components/ui/button";
-import { useGlobalConfig } from "./hooks/use-global-config";
 import { Autocomplete } from "./components/ui/autocomplete";
+import { Button } from "./components/ui/button";
+import { WheelConfig } from "./components/wheel-config";
+import { useCarSetup } from "./hooks/use-car-setup";
+import { useGlobalConfig } from "./hooks/use-global-config";
+import { useHpLine } from "./hooks/use-hp-line";
 
 export const App = () => {
   const { config } = useGlobalConfig();
   const [openConfig, setOpenConfig] = useState(false);
-  const { data } = useInitialData();
-  const hpLine = useHpLine(data);
+  const { setup } = useCarSetup();
+  const hpLine = useHpLine(setup.data);
   // zip data and hpLine
-  const dataWithHp = data.map((point, index) => ({
+  const dataWithHp = setup.data.map((point, index) => ({
     ...point,
     hp: hpLine[index],
   }));
 
-  if (data.length === 0) {
+  if (setup.data.length === 0) {
     return (
       <main className="p-2">
         <InitialDataModal />
@@ -59,7 +59,7 @@ export const App = () => {
             {
               label: "torque",
               color: "#4a90e2",
-              data: data.map((point) => ({
+              data: setup.data.map((point) => ({
                 key: Math.trunc(point.rpm),
                 value: point.torque,
               })),
