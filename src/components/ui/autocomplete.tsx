@@ -18,7 +18,7 @@ interface AutocompleteProps {
 export const Autocomplete: FC<AutocompleteProps> = ({
   items,
   onSelect,
-  placeholder = "Buscar o seleccionar...",
+  placeholder = "Select an option",
   listId,
   className = "",
   style = {},
