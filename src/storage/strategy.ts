@@ -12,4 +12,5 @@ export interface StorageStrategy<T = unknown> {
   remove(key: string): Promise<void>;
   clear(): Promise<void>;
   addChangeListener(handler: StorageChangeHandler<T>): () => void;
+  keys(): string[];
 }

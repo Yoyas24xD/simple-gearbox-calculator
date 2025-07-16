@@ -7,6 +7,7 @@ interface AutocompleteItem {
 }
 
 interface AutocompleteProps {
+  value?: string | number;
   items: AutocompleteItem[];
   onSelect: (item: AutocompleteItem | null) => void;
   placeholder?: string;
@@ -16,6 +17,7 @@ interface AutocompleteProps {
 }
 
 export const Autocomplete: FC<AutocompleteProps> = ({
+  value,
   items,
   onSelect,
   placeholder = "Select an option",
@@ -45,7 +47,7 @@ export const Autocomplete: FC<AutocompleteProps> = ({
         type="text"
         className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         placeholder={placeholder}
-        value={inputValue}
+        value={inputValue ?? value ?? ""}
         onChange={handleInputChange}
         list={listId}
       />

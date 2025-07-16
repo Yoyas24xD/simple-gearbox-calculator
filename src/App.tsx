@@ -16,9 +16,9 @@ import { useIndexedDB } from "./hooks/use-storage";
 export const App = () => {
   const { config } = useGlobalConfig();
   const [openConfig, setOpenConfig] = useState(false);
-  const { setup, persistSetup } = useCarSetup();
+  const { setup, setSetup, persistSetup, loadSetup } = useCarSetup();
   const hpLine = useHpLine(setup.data);
-  const storage = useIndexedDB<CarSetup[]>("setups");
+  const storage = useIndexedDB<CarSetup>(setup.name);
 
   // zip data and hpLine
   const dataWithHp = setup.data.map((point, index) => ({
@@ -41,16 +41,21 @@ export const App = () => {
     <main className="p-2">
       <header>
         <Autocomplete
-        
           items={
-            storage.value?.map(({ setupName }) => ({
-              id: setupName,
-              value: setupName,
-              label: setupName,
-            })) ?? []
+            storage.keys().map((key) => ({
+              id: key,
+              label: key,
+              value: key,
+            })) || []
           }
           listId="setup"
-          onSelect={() => null}
+          onSelect={(item) => {
+            if (!item) return;
+            setSetup({
+              type: "UPDATE_SETUP_NAME",
+              setup: storage.value?.find((s) => s.name === item.value) || setup,
+            });
+          }}
         />
         <Button flavor="primary" onClick={persistSetup} className="ml-2">
           Save Setup

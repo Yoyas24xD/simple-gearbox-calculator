@@ -54,9 +54,9 @@ export const InitialDataModal = () => {
           <Autocomplete
             items={
               storage.value?.map((s) => ({
-                id: s.setupName,
-                label: s.setupName,
-                value: s.setupName,
+                id: s.name,
+                label: s.name,
+                value: s.name,
               })) ?? []
             }
             onSelect={() => null}

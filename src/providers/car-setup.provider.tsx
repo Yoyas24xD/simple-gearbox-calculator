@@ -13,7 +13,7 @@ const INITIAL_SETUP: CarSetup = {
   gears: [],
   finalDrive: 3.5,
   wheelCircumference: 80,
-  setupName: "New Setup",
+  name: "New Setup",
 };
 
 const carSetupReducer = (state: CarSetup, action: UpdateSetupAction) => {
@@ -36,13 +36,13 @@ const carSetupReducer = (state: CarSetup, action: UpdateSetupAction) => {
 };
 
 export const CarSetupProvider = ({ children }: { children: ReactNode }) => {
+  const [setup, dispatch] = useReducer(carSetupReducer, INITIAL_SETUP);
   const { config } = useGlobalConfig();
-  const storage = useIndexedDB<CarSetup[]>("setups");
+  const storage = useIndexedDB<CarSetup>(setup.name);
   const debouncedSave = useDebounce(
-    (setup: CarSetup) => storage.save([...(storage.value ?? []), setup]),
+    (setup: CarSetup) => storage.save(setup),
     1000
   );
-  const [setup, dispatch] = useReducer(carSetupReducer, INITIAL_SETUP);
 
   useEffect(() => {
     if (setup.gears.length < config.gearCount) {
@@ -69,13 +69,11 @@ export const CarSetupProvider = ({ children }: { children: ReactNode }) => {
           setSetup: dispatch,
           persistSetup: () => debouncedSave(setup),
           loadSetup: () => {
-            const targetSetup = storage.value?.find(
-              (s) => s.setupName === setup.setupName
-            );
-            if (!targetSetup) {
-              throw new Error("Setup not found");
+            const savedSetup = storage.value;
+            if (!savedSetup) {
+              throw new Error("No setup found in storage");
             }
-            dispatch({ type: "UPDATE_DATA", data: targetSetup.data });
+            dispatch({ type: "UPDATE_ALL", setup: savedSetup });
           },
         }),
         [setup, dispatch]

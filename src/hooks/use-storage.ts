@@ -83,6 +83,8 @@ const useBrowserStorage = <T = unknown>(
     setIsLoading(false);
   }, [storage]);
 
+  const keys = useCallback(() => storage.keys(), [storage]);
+
   return {
     value,
     isLoading,
@@ -90,6 +92,7 @@ const useBrowserStorage = <T = unknown>(
     save,
     remove,
     clear,
+    keys,
     hasValue: value !== null,
   };
 };

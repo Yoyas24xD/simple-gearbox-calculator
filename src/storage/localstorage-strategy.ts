@@ -4,9 +4,7 @@ import type {
   StorageStrategy,
 } from "./strategy";
 
-export class LocalStorageStrategy<T = unknown>
-  implements StorageStrategy<T>
-{
+export class LocalStorageStrategy<T = unknown> implements StorageStrategy<T> {
   private readonly listeners: Set<StorageChangeHandler<T>> = new Set();
 
   async save(key: string, value: T): Promise<void> {
@@ -34,6 +32,10 @@ export class LocalStorageStrategy<T = unknown>
   async clear(): Promise<void> {
     localStorage.clear();
     this.notifyListeners("", null, "clear");
+  }
+
+  keys(): string[] {
+    return Object.keys(localStorage);
   }
 
   addChangeListener(handler: StorageChangeHandler<T>): () => void {
