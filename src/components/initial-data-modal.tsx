@@ -53,13 +53,11 @@ export const InitialDataModal = () => {
         <article className="flex gap-2">
           <Autocomplete
             items={
-              storage.value
-                ?.filter((s) => s.setupName)
-                .map((s) => ({
-                  id: s.setupName!, // TODO: check if setupName is defined
-                  label: s.setupName!,
-                  value: s.setupName!,
-                })) ?? []
+              storage.value?.map((s) => ({
+                id: s.setupName,
+                label: s.setupName,
+                value: s.setupName,
+              })) ?? []
             }
             onSelect={() => null}
             listId="setup"

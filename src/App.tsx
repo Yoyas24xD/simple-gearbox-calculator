@@ -8,15 +8,18 @@ import { LineChartMultiple } from "./components/plots/line";
 import { Autocomplete } from "./components/ui/autocomplete";
 import { Button } from "./components/ui/button";
 import { WheelConfig } from "./components/wheel-config";
-import { useCarSetup } from "./hooks/use-car-setup";
+import { useCarSetup, type CarSetup } from "./hooks/use-car-setup";
 import { useGlobalConfig } from "./hooks/use-global-config";
 import { useHpLine } from "./hooks/use-hp-line";
+import { useIndexedDB } from "./hooks/use-storage";
 
 export const App = () => {
   const { config } = useGlobalConfig();
   const [openConfig, setOpenConfig] = useState(false);
-  const { setup } = useCarSetup();
+  const { setup, persistSetup } = useCarSetup();
   const hpLine = useHpLine(setup.data);
+  const storage = useIndexedDB<CarSetup[]>("setups");
+
   // zip data and hpLine
   const dataWithHp = setup.data.map((point, index) => ({
     ...point,
@@ -36,16 +39,23 @@ export const App = () => {
 
   return (
     <main className="p-2">
-      <Autocomplete
-        // TODO: placeholder array change it
-        items={Array.from({ length: 10 }, (_, i) => ({
-          id: i,
-          value: i.toString(),
-          label: i.toString(),
-        }))}
-        listId="setup"
-        onSelect={() => null}
-      />
+      <header>
+        <Autocomplete
+        
+          items={
+            storage.value?.map(({ setupName }) => ({
+              id: setupName,
+              value: setupName,
+              label: setupName,
+            })) ?? []
+          }
+          listId="setup"
+          onSelect={() => null}
+        />
+        <Button flavor="primary" onClick={persistSetup} className="ml-2">
+          Save Setup
+        </Button>
+      </header>
       <Button onClick={() => setOpenConfig(true)}>
         <img src={Gear} className="w-6" alt="config" />
       </Button>

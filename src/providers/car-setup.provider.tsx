@@ -28,6 +28,8 @@ const carSetupReducer = (state: CarSetup, action: UpdateSetupAction) => {
       return { ...state, wheelCircumference: action.wheelCircumference };
     case "UPDATE_SETUP_NAME":
       return { ...state, setupName: action.setupName };
+    case "UPDATE_ALL":
+      return { ...state, ...action.setup };
     default:
       throw new Error(`Unknown action type: ${action}`);
   }

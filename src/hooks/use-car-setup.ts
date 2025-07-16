@@ -5,7 +5,7 @@ export interface CarSetup {
   gears: number[];
   finalDrive: number;
   wheelCircumference: number;
-  setupName?: string;
+  setupName: string;
 }
 
 export type UpdateSetupAction =
