@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "sonner";
-import { useCarSetup } from "../hooks/use-car-setup";
+import { useCarSetup, type CarSetup } from "../hooks/use-car-setup";
 import { Button } from "./ui/button";
+import { Autocomplete } from "./ui/autocomplete";
+import { useIndexedDB } from "../hooks/use-storage";
 
 const parseCsv = (csv: string): { rpm: number; torque: number }[] => {
   return csv
@@ -20,6 +22,7 @@ export const InitialDataModal = () => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [csv, setCsv] = useState<string>("");
   const { setSetup } = useCarSetup();
+  const storage = useIndexedDB<CarSetup[]>("setups");
 
   if (!isOpen) return null;
 
@@ -32,7 +35,7 @@ export const InitialDataModal = () => {
         value={csv}
         onChange={(e) => setCsv(e.target.value)}
       />
-      <div className="flex gap-4 py-2">
+      <div className="flex gap-4 py-2 items-center">
         <Button
           onClick={() => {
             const parsedData = parseCsv(csv);
@@ -47,14 +50,29 @@ export const InitialDataModal = () => {
         >
           Load Csv
         </Button>
-        <Button
-          flavor="secondary"
-          onClick={() => {
-            console.log("prueba");
-          }}
-        >
-          Load setup
-        </Button>
+        <article className="flex gap-2">
+          <Autocomplete
+            items={
+              storage.value
+                ?.filter((s) => s.setupName)
+                .map((s) => ({
+                  id: s.setupName!, // TODO: check if setupName is defined
+                  label: s.setupName!,
+                  value: s.setupName!,
+                })) ?? []
+            }
+            onSelect={() => null}
+            listId="setup"
+          />
+          <Button
+            flavor="secondary"
+            onClick={() => {
+              console.log("prueba");
+            }}
+          >
+            Load setup
+          </Button>
+        </article>
       </div>
     </section>,
     document.body
