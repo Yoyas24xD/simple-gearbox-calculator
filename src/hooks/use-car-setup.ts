@@ -20,7 +20,7 @@ export interface CarSetupReducer {
   setup: CarSetup;
   setSetup: (action: UpdateSetupAction) => void;
   persistSetup: () => void;
-  loadSetup: () => void;
+  loadSetup: (name: string) => void;
 }
 
 export const CarSetupContext = createContext<CarSetupReducer | null>(null);

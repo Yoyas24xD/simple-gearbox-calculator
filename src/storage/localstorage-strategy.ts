@@ -34,7 +34,7 @@ export class LocalStorageStrategy<T = unknown> implements StorageStrategy<T> {
     this.notifyListeners("", null, "clear");
   }
 
-  keys(): string[] {
+  async keys(): Promise<string[]> {
     return Object.keys(localStorage);
   }
 

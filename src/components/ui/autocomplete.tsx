@@ -1,7 +1,6 @@
 import { useState, type ChangeEvent, type CSSProperties, type FC } from "react";
 
 interface AutocompleteItem {
-  id: string | number;
   label: string;
   value: string;
 }
@@ -57,7 +56,7 @@ export const Autocomplete: FC<AutocompleteProps> = ({
         className="bg-white rounded-md shadow-lg border border-gray-200"
       >
         {items.map((item) => (
-          <option key={item.id} value={item.value}>
+          <option key={item.value} value={item.value}>
             {item.label}
           </option>
         ))}

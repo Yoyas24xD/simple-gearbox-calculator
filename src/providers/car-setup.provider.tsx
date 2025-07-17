@@ -6,7 +6,8 @@ import {
 } from "../hooks/use-car-setup";
 import { useDebounce } from "../hooks/use-debounce";
 import { useGlobalConfig } from "../hooks/use-global-config";
-import { useIndexedDB } from "../hooks/use-storage";
+import { StorageFactory } from "../storage/storage-factory";
+import { toast } from "sonner";
 
 const INITIAL_SETUP: CarSetup = {
   data: [],
@@ -38,10 +39,15 @@ const carSetupReducer = (state: CarSetup, action: UpdateSetupAction) => {
 export const CarSetupProvider = ({ children }: { children: ReactNode }) => {
   const [setup, dispatch] = useReducer(carSetupReducer, INITIAL_SETUP);
   const { config } = useGlobalConfig();
-  const storage = useIndexedDB<CarSetup>(setup.name);
+  const storage = StorageFactory.getStorage<CarSetup>("indexeddb");
   const debouncedSave = useDebounce(
-    (setup: CarSetup) => storage.save(setup),
-    1000
+    (setup: CarSetup) =>
+      toast.promise(storage.save(setup.name, setup), {
+        loading: "Saving setup...",
+        success: "Setup saved successfully!",
+        error: "Failed to save setup.",
+      }),
+    500
   );
 
   useEffect(() => {
@@ -68,10 +74,11 @@ export const CarSetupProvider = ({ children }: { children: ReactNode }) => {
           setup,
           setSetup: dispatch,
           persistSetup: () => debouncedSave(setup),
-          loadSetup: () => {
-            const savedSetup = storage.value;
+          loadSetup: async (name: string) => {
+            const savedSetup = await storage.load(name);
             if (!savedSetup) {
-              throw new Error("No setup found in storage");
+              console.warn(`No setup found for name: ${name}`);
+              return;
             }
             dispatch({ type: "UPDATE_ALL", setup: savedSetup });
           },

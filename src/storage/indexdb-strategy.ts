@@ -13,10 +13,13 @@ export class IndexedDBStrategy<T = unknown> implements StorageStrategy<T> {
   constructor() {
     this.initializeDB();
   }
-  keys(): string[] {
+  keys(): Promise<string[]> {
     const store = this.getObjectStore("readonly");
     const request = store.getAllKeys();
-    return request.result.map(String);
+    return new Promise((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result.map(String));
+      request.onerror = () => reject(request.error);
+    });
   }
 
   private async initializeDB(): Promise<void> {

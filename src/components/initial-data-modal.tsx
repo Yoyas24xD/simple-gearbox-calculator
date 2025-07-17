@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "sonner";
 import { useCarSetup, type CarSetup } from "../hooks/use-car-setup";
@@ -21,8 +21,18 @@ const parseCsv = (csv: string): { rpm: number; torque: number }[] => {
 export const InitialDataModal = () => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [csv, setCsv] = useState<string>("");
-  const { setSetup } = useCarSetup();
+  const { setSetup, loadSetup } = useCarSetup();
   const storage = useIndexedDB<CarSetup[]>("setups");
+  const [setups, setSetups] = useState<string[]>([]);
+
+  const fetchSetups = async () => {
+    const keys = await storage.keys();
+    setSetups(keys);
+  };
+
+  useEffect(() => {
+    fetchSetups();
+  }, []);
 
   if (!isOpen) return null;
 
@@ -53,13 +63,18 @@ export const InitialDataModal = () => {
         <article className="flex gap-2">
           <Autocomplete
             items={
-              storage.value?.map((s) => ({
-                id: s.name,
-                label: s.name,
-                value: s.name,
+              setups.map((name) => ({
+                label: name,
+                value: name,
               })) ?? []
             }
-            onSelect={() => null}
+            value={""}
+            placeholder="Select a setup"
+            onSelect={(item) => {
+              if (!item) return;
+              loadSetup(item.value);
+              setIsOpen(false);
+            }}
             listId="setup"
           />
           <Button
