@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type CSSProperties, type FC } from "react";
+import { type ChangeEvent, type CSSProperties, type FC } from "react";
 
 interface AutocompleteItem {
   label: string;
@@ -6,29 +6,29 @@ interface AutocompleteItem {
 }
 
 interface AutocompleteProps {
-  value?: string | number;
+  value?: string;
   items: AutocompleteItem[];
-  onSelect: (item: AutocompleteItem | null) => void;
   placeholder?: string;
   listId: string;
   className?: string;
   style?: CSSProperties;
+  onSelect: (item: AutocompleteItem | null) => void;
+  onChange?: (value: string) => void;
 }
 
 export const Autocomplete: FC<AutocompleteProps> = ({
   value,
   items,
-  onSelect,
-  placeholder = "Select an option",
+  placeholder = "Setup name...",
   listId,
   className = "",
   style = {},
+  onSelect,
+  onChange,
 }) => {
-  const [inputValue, setInputValue] = useState<string>("");
-
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setInputValue(value);
+    onChange?.(value);
 
     const selectedItem = items.find(
       (item) => item.value === value || item.label === value
@@ -46,7 +46,7 @@ export const Autocomplete: FC<AutocompleteProps> = ({
         type="text"
         className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         placeholder={placeholder}
-        value={inputValue ?? value ?? ""}
+        value={value}
         onChange={handleInputChange}
         list={listId}
       />

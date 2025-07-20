@@ -8,7 +8,7 @@ import { useCarSetup, type CarSetup } from "../hooks/use-car-setup";
 
 export const Header = () => {
   const [openConfig, setOpenConfig] = useState(false);
-  const { setup, persistSetup, loadSetup } = useCarSetup();
+  const { setup, setSetup, persistSetup, loadSetup } = useCarSetup();
   const storage = useIndexedDB<CarSetup>(setup.name);
   const [setups, setSetups] = useState<string[]>([]);
 
@@ -38,6 +38,13 @@ export const Header = () => {
               if (!item) return;
               loadSetup(item.value);
             }}
+            onChange={(value) => {
+              console.log(value);
+              setSetup({
+                type: "UPDATE_SETUP_NAME",
+                name: value,
+              });
+            }}
           />
         </div>
 
@@ -48,6 +55,13 @@ export const Header = () => {
             className="ml-0 sm:ml-2"
           >
             Save Setup
+          </Button>
+
+          <Button
+            flavor="danger"
+            onClick={() => console.log("TODO: Delete setup")}
+          >
+            Delete Setup
           </Button>
 
           <Button onClick={() => setOpenConfig(true)}>

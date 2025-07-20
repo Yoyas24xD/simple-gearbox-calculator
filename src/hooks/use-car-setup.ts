@@ -13,7 +13,7 @@ export type UpdateSetupAction =
   | { type: "UPDATE_GEARS"; gears: number[] }
   | { type: "UPDATE_FINAL_DRIVE"; finalDrive: number }
   | { type: "UPDATE_WHEEL_CIRCUMFERENCE"; wheelCircumference: number }
-  | { type: "UPDATE_SETUP_NAME"; setupName: string }
+  | { type: "UPDATE_SETUP_NAME"; name: string }
   | { type: "UPDATE_ALL"; setup: CarSetup };
 
 export interface CarSetupReducer {

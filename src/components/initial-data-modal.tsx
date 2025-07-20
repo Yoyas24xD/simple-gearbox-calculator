@@ -21,7 +21,7 @@ const parseCsv = (csv: string): { rpm: number; torque: number }[] => {
 export const InitialDataModal = () => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [csv, setCsv] = useState<string>("");
-  const { setSetup, loadSetup } = useCarSetup();
+  const { setup, setSetup, loadSetup } = useCarSetup();
   const storage = useIndexedDB<CarSetup[]>("setups");
   const [setups, setSetups] = useState<string[]>([]);
 
@@ -57,25 +57,32 @@ export const InitialDataModal = () => {
             setIsOpen(false);
             toast.success("Data loaded successfully!");
           }}
+          disabled={!csv.trim()}
         >
           Load Csv
         </Button>
         <article className="flex gap-2">
           <Autocomplete
+            value={setup.name !== "New Setup" ? setup.name : ""}
+            placeholder="Select a setup"
+            listId="setup"
             items={
               setups.map((name) => ({
                 label: name,
                 value: name,
               })) ?? []
             }
-            value={""}
-            placeholder="Select a setup"
+            onChange={(value) => {
+              setSetup({
+                type: "UPDATE_SETUP_NAME",
+                name: value,
+              });
+            }}
             onSelect={(item) => {
               if (!item) return;
               loadSetup(item.value);
               setIsOpen(false);
             }}
-            listId="setup"
           />
           <Button
             flavor="secondary"

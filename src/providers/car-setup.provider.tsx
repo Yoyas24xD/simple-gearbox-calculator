@@ -28,7 +28,7 @@ const carSetupReducer = (state: CarSetup, action: UpdateSetupAction) => {
     case "UPDATE_WHEEL_CIRCUMFERENCE":
       return { ...state, wheelCircumference: action.wheelCircumference };
     case "UPDATE_SETUP_NAME":
-      return { ...state, setupName: action.setupName };
+      return { ...state, name: action.name };
     case "UPDATE_ALL":
       return { ...state, ...action.setup };
     default:

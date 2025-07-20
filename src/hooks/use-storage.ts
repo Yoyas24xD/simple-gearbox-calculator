@@ -83,7 +83,7 @@ const useBrowserStorage = <T = unknown>(
     setIsLoading(false);
   }, [storage]);
 
-  const keys = useCallback(() => storage.keys(), [storage]);
+  const keys = useCallback(async () => await storage.keys(), [storage]);
 
   return {
     value,

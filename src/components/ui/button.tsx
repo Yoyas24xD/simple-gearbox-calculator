@@ -12,6 +12,14 @@ export const Button: FC<Props> = (props) => {
     success: "bg-green-500 hover:bg-green-600 text-white",
     secondary: "bg-cyan-800 hover:bg-cyan-900 text-white",
   };
+
+  if (rest.disabled) {
+    classNames.primary = "bg-gray-500 text-gray-300 cursor-not-allowed";
+    classNames.danger = "bg-gray-500 text-gray-300 cursor-not-allowed";
+    classNames.success = "bg-gray-500 text-gray-300 cursor-not-allowed";
+    classNames.secondary = "bg-gray-500 text-gray-300 cursor-not-allowed";
+  }
+
   return (
     <button
       {...rest}
