@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { toast } from "sonner";
 import { useCarSetup, type CarSetup } from "../hooks/use-car-setup";
 import { useIndexedDB } from "../hooks/use-storage";
 import { Autocomplete } from "./ui/autocomplete";
@@ -14,7 +13,7 @@ const parseCsv = (csv: string): { rpm: number; torque: number }[] => {
       const [rpm, torque] = line
         .split(";")
         .map((n) => Number(n.replace(",", ".")));
-      return { rpm, torque };
+      return { rpm: rpm > 100 ? rpm : rpm * 1000, torque };
     });
 };
 
@@ -55,7 +54,6 @@ export const InitialDataModal = () => {
             });
             setCsv("");
             setIsOpen(false);
-            toast.success("Data loaded successfully!");
           }}
           disabled={!csv.trim()}
         >
