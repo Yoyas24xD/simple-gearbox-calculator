@@ -1,11 +1,13 @@
-import type { FC } from "react";
-import { useGears } from "../../hooks/use-gears";
-import { LineChartMultiple } from "./line";
+import type { CSSProperties, FC } from "react";
+import { useCarSetup } from "../../hooks/use-car-setup";
 import { computeSpeedFromRpm } from "../../hooks/use-gear-speed";
+import { useGlobalConfig } from "../../hooks/use-global-config";
+import { LineChartMultiple } from "./line";
 
 interface Props {
   data: { hp: number; rpm: number; torque: number }[];
   className?: string;
+  style?: CSSProperties;
 }
 
 const GEARS_COLORS = [
@@ -19,20 +21,26 @@ const GEARS_COLORS = [
   "#7ed321", // green
 ];
 
-export const GearsPlot: FC<Props> = ({ data, className }) => {
-  const { gears, wheelCircumference, finalDrive } = useGears();
+export const GearsPlot: FC<Props> = ({ data, className, style }) => {
+  const { config } = useGlobalConfig();
+  const { setup } = useCarSetup();
   const maxHp = Math.max(...data.map((d) => d.hp));
   const maxHpTorque = data.find((d) => d.hp === maxHp);
   if (!maxHpTorque) {
     return null;
   }
 
-  const lines = gears.map((gear, i) => {
+  const lines = setup.gears.map((gear, i) => {
     const gearData = data.map((d) => ({
       key: Math.trunc(
-        computeSpeedFromRpm(d.rpm, wheelCircumference, gear, finalDrive)
+        computeSpeedFromRpm(
+          d.rpm,
+          setup.wheelCircumference,
+          gear,
+          setup.finalDrive
+        )
       ),
-      value: d.torque * gear * finalDrive,
+      value: d.torque * gear * setup.finalDrive,
     }));
     return {
       label: `Gear ${i + 1}`,
@@ -41,31 +49,37 @@ export const GearsPlot: FC<Props> = ({ data, className }) => {
     };
   });
 
-  const tractionLine = gears.map((gear) => {
+  const tractionLine = setup.gears.map((gear) => {
     const tractionSpeed = computeSpeedFromRpm(
       maxHpTorque.rpm,
-      wheelCircumference,
+      setup.wheelCircumference,
       gear,
-      finalDrive
+      setup.finalDrive
     );
     return {
       key: Math.trunc(tractionSpeed),
-      value: maxHpTorque.torque * gear * finalDrive,
+      value: maxHpTorque.torque * gear * setup.finalDrive,
     };
   });
 
   return (
     <LineChartMultiple
+      style={style}
       className={className}
-      lines={[
-        ...lines,
-        {
-          label: "Traction",
-          color: "#F00",
-          data: tractionLine,
-        },
-      ]}
+      lines={
+        setup.gears.every((g) => g)
+          ? [
+              ...lines,
+              {
+                label: "Traction",
+                color: "#F00",
+                data: tractionLine,
+              },
+            ]
+          : []
+      }
       xTickStep={10}
+      hidePoints={!config.gearsGraph.showPoints}
     />
   );
 };

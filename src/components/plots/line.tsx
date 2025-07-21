@@ -3,6 +3,7 @@ import type { CSSProperties, FC } from "react";
 
 interface Props {
   className?: string;
+  style?: CSSProperties;
   lines: {
     label: string;
     color: string;
@@ -27,6 +28,7 @@ const remoteDuplicates = (arr: Props["lines"][number]["data"]) => {
 export const LineChartMultiple: FC<Props> = ({
   lines: rawLines,
   className,
+  style,
   hidePoints,
   xTickStep = 50,
 }) => {
@@ -67,7 +69,10 @@ export const LineChartMultiple: FC<Props> = ({
     ); // Asegurar que los ticks sean múltiplos del paso o los extremos
 
   return (
-    <div className={`flex flex-col min-h-72 w-full ${className ?? ""}`}>
+    <div
+      style={style}
+      className={`flex flex-col min-h-72 w-full ${className ?? ""}`}
+    >
       {/* Leyenda - Contenedor superior */}
       <div className="flex justify-center flex-wrap gap-4 pb-2">
         {lines.map((lineData, index) => (

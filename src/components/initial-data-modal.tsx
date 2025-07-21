@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { useInitialData } from "../hooks/use-initial-data";
 import { toast } from "sonner";
+import { useCarSetup, type CarSetup } from "../hooks/use-car-setup";
+import { useIndexedDB } from "../hooks/use-storage";
+import { Autocomplete } from "./ui/autocomplete";
 import { Button } from "./ui/button";
 
 const parseCsv = (csv: string): { rpm: number; torque: number }[] => {
@@ -19,7 +21,18 @@ const parseCsv = (csv: string): { rpm: number; torque: number }[] => {
 export const InitialDataModal = () => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [csv, setCsv] = useState<string>("");
-  const { setData } = useInitialData();
+  const { setup, setSetup, loadSetup } = useCarSetup();
+  const storage = useIndexedDB<CarSetup[]>("setups");
+  const [setups, setSetups] = useState<string[]>([]);
+
+  const fetchSetups = async () => {
+    const keys = await storage.keys();
+    setSetups(keys);
+  };
+
+  useEffect(() => {
+    fetchSetups();
+  }, []);
 
   if (!isOpen) return null;
 
@@ -32,17 +45,48 @@ export const InitialDataModal = () => {
         value={csv}
         onChange={(e) => setCsv(e.target.value)}
       />
-      <Button
-        onClick={() => {
-          const parsedData = parseCsv(csv);
-          setData(parsedData);
-          setCsv(""); // Clear the input after submission
-          setIsOpen(false); // Close the modal after submission
-          toast.success("Data loaded successfully!");
-        }}
-      >
-        Load Csv
-      </Button>
+      <div className="flex gap-4 py-2 items-center">
+        <Button
+          onClick={() => {
+            const parsedData = parseCsv(csv);
+            setSetup({
+              type: "UPDATE_DATA",
+              data: parsedData,
+            });
+            setCsv("");
+            setIsOpen(false);
+            toast.success("Data loaded successfully!");
+          }}
+          disabled={!csv.trim()}
+        >
+          Load Csv
+        </Button>
+        <article className="flex gap-2">
+          <Autocomplete
+            disabled={setups.length === 0}
+            key={setups.length}
+            value={setup.name !== "New Setup" ? setup.name : ""}
+            placeholder="Select a setup"
+            items={
+              setups.map((name) => ({
+                label: name,
+                value: name,
+              })) ?? []
+            }
+            onChange={(value) => {
+              setSetup({
+                type: "UPDATE_SETUP_NAME",
+                name: value,
+              });
+            }}
+            onSelect={(item) => {
+              if (!item) return;
+              loadSetup(item.value);
+              setIsOpen(false);
+            }}
+          />
+        </article>
+      </div>
     </section>,
     document.body
   );

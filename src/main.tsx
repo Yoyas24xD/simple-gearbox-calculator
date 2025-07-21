@@ -1,18 +1,18 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { Toaster } from "sonner";
 import { App } from "./App.tsx";
 import "./index.css";
-import { GearsProvider } from "./providers/gears.provider.tsx";
-import { InitialDataProvider } from "./providers/initial-data.provider.tsx";
-import { Toaster } from "sonner";
+import { CarSetupProvider } from "./providers/car-setup.provider.tsx";
+import { GlobalConfigProvider } from "./providers/global-config.provider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <InitialDataProvider>
-      <GearsProvider>
+    <GlobalConfigProvider>
+      <CarSetupProvider>
         <App />
-      </GearsProvider>
-    </InitialDataProvider>
+      </CarSetupProvider>
+    </GlobalConfigProvider>
     <Toaster richColors />
   </StrictMode>
 );

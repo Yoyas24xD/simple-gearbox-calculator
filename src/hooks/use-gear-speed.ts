@@ -1,26 +1,38 @@
-import { useGears } from "./use-gears";
-import { useInitialData } from "./use-initial-data";
+import { useCarSetup } from "./use-car-setup";
 
 export const useGearSpeed = (rpm: number, gearRatio: number): number => {
-  const { finalDrive, wheelCircumference } = useGears();
-  return computeSpeedFromRpm(rpm, wheelCircumference, gearRatio, finalDrive);
+  const { setup } = useCarSetup();
+  return computeSpeedFromRpm(
+    rpm,
+    setup.wheelCircumference,
+    gearRatio,
+    setup.finalDrive
+  );
 };
 
 export const useGearSpeeds = (gearRatio: number): number[] => {
-  const { data } = useInitialData();
-  const { finalDrive, wheelCircumference } = useGears();
-  return data.map(({ rpm }) =>
-    computeSpeedFromRpm(rpm, wheelCircumference, gearRatio, finalDrive)
+  const { setup } = useCarSetup();
+  return setup.data.map(({ rpm }) =>
+    computeSpeedFromRpm(
+      rpm,
+      setup.wheelCircumference,
+      gearRatio,
+      setup.finalDrive
+    )
   );
 };
 
 export const useGearsSpeeds = (): number[][] => {
-  const { gears, wheelCircumference, finalDrive } = useGears();
-  const { data } = useInitialData();
+  const { setup } = useCarSetup();
 
-  return gears.map((gearRatio) =>
-    data.map(({ rpm }) =>
-      computeSpeedFromRpm(rpm, wheelCircumference, gearRatio, finalDrive)
+  return setup.gears.map((gearRatio) =>
+    setup.data.map(({ rpm }) =>
+      computeSpeedFromRpm(
+        rpm,
+        setup.wheelCircumference,
+        gearRatio,
+        setup.finalDrive
+      )
     )
   );
 };

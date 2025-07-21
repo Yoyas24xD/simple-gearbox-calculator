@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useGears } from "../hooks/use-gears";
-import { Input } from "./ui/input";
+import { useCarSetup } from "../hooks/use-car-setup";
 import { Checkbox } from "./ui/checkbox";
+import { Input } from "./ui/input";
 
 interface WheelConfigState {
   width: number;
@@ -11,7 +11,7 @@ interface WheelConfigState {
 }
 
 export const WheelConfig = () => {
-  const { wheelCircumference, setWheelCircumference } = useGears();
+  const { setup, setSetup } = useCarSetup();
   const [state, setState] = useState<WheelConfigState>({
     width: 305,
     profile: 0.3,
@@ -19,12 +19,17 @@ export const WheelConfig = () => {
     isAwd: false,
   });
 
+  // TODO: check if this effect is necessary
+  // It initializes the wheel circumference based on the initial state.
+  // If the initial state is always set, this might not be needed.
   useEffect(() => {
     const { width, profile, rimDiameter } = state;
-    setWheelCircumference(
-      Math.PI *
-        (rimDiameter + ((width * profile) / 25.4) * (state.isAwd ? 4 : 2))
-    );
+    setSetup({
+      type: "UPDATE_WHEEL_CIRCUMFERENCE",
+      wheelCircumference:
+        Math.PI *
+        (rimDiameter + ((width * profile) / 25.4) * (state.isAwd ? 4 : 2)),
+    });
   }, []);
 
   const handleChange = (
@@ -39,7 +44,10 @@ export const WheelConfig = () => {
       const wheelNumber = newState.isAwd ? 4 : 2;
       const circumference =
         Math.PI * (rimDiameter + ((width * profile) / 25.4) * wheelNumber);
-      setWheelCircumference(circumference);
+      setSetup({
+        type: "UPDATE_WHEEL_CIRCUMFERENCE",
+        wheelCircumference: circumference,
+      });
     }
   };
 
@@ -98,7 +106,7 @@ export const WheelConfig = () => {
           <p>
             Wheel Circumference:{" "}
             <span className="text-amber-400">
-              {wheelCircumference.toFixed(2)}
+              {setup.wheelCircumference.toFixed(2)}
             </span>{" "}
             mm
           </p>

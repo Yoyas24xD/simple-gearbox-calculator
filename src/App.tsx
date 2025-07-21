@@ -1,21 +1,25 @@
 import { GearConfig } from "./components/gear-config";
+import { Header } from "./components/header";
 import { InitialDataModal } from "./components/initial-data-modal";
 import { GearsPlot } from "./components/plots/gears";
 import { LineChartMultiple } from "./components/plots/line";
 import { WheelConfig } from "./components/wheel-config";
+import { useCarSetup } from "./hooks/use-car-setup";
+import { useGlobalConfig } from "./hooks/use-global-config";
 import { useHpLine } from "./hooks/use-hp-line";
-import { useInitialData } from "./hooks/use-initial-data";
 
 export const App = () => {
-  const { data } = useInitialData();
-  const hpLine = useHpLine(data);
+  const { config } = useGlobalConfig();
+  const { setup } = useCarSetup();
+  const hpLine = useHpLine(setup.data);
+
   // zip data and hpLine
-  const dataWithHp = data.map((point, index) => ({
+  const dataWithHp = setup.data.map((point, index) => ({
     ...point,
     hp: hpLine[index],
   }));
 
-  if (data.length === 0) {
+  if (setup.data.length === 0) {
     return (
       <main className="p-2">
         <InitialDataModal />
@@ -27,31 +31,43 @@ export const App = () => {
   }
 
   return (
-    <main className="p-2">
-      <GearConfig />
-      <WheelConfig />
-      <LineChartMultiple
-        lines={[
-          {
-            label: "torque",
-            color: "#4a90e2",
-            data: data.map((point) => ({
-              key: Math.trunc(point.rpm),
-              value: point.torque,
-            })),
-          },
-          {
-            label: "hp",
-            color: "#e94e77",
-            data: dataWithHp.map((point) => ({
-              key: Math.trunc(point.rpm),
-              value: point.hp,
-            })),
-          },
-        ]}
-        xTickStep={125}
-      />
-      <GearsPlot className="h-100" data={dataWithHp} />
+    <main>
+      <Header />
+      <section className="p-2">
+        <GearConfig />
+        <WheelConfig />
+        {config.hpTorqueGraph.show && (
+          <LineChartMultiple
+            style={{ height: config.hpTorqueGraph.height + "px" }}
+            lines={[
+              {
+                label: "torque",
+                color: "#4a90e2",
+                data: setup.data.map((point) => ({
+                  key: Math.trunc(point.rpm),
+                  value: point.torque,
+                })),
+              },
+              {
+                label: "hp",
+                color: "#e94e77",
+                data: dataWithHp.map((point) => ({
+                  key: Math.trunc(point.rpm),
+                  value: point.hp,
+                })),
+              },
+            ]}
+            xTickStep={125}
+            hidePoints={!config.hpTorqueGraph.showPoints}
+          />
+        )}
+        {config.gearsGraph.show && (
+          <GearsPlot
+            style={{ height: config.gearsGraph.height + "px" }}
+            data={dataWithHp}
+          />
+        )}
+      </section>
     </main>
   );
 };
