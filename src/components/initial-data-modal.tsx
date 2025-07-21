@@ -63,6 +63,7 @@ export const InitialDataModal = () => {
         </Button>
         <article className="flex gap-2">
           <Autocomplete
+            disabled={setups.length === 0}
             key={setups.length}
             value={setup.name !== "New Setup" ? setup.name : ""}
             placeholder="Select a setup"
@@ -84,14 +85,6 @@ export const InitialDataModal = () => {
               setIsOpen(false);
             }}
           />
-          <Button
-            flavor="secondary"
-            onClick={() => {
-              console.log("prueba");
-            }}
-          >
-            Load setup
-          </Button>
         </article>
       </div>
     </section>,

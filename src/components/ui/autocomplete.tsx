@@ -11,6 +11,7 @@ interface AutocompleteProps {
   placeholder?: string;
   className?: string;
   style?: CSSProperties;
+  disabled?: boolean;
   onSelect: (item: AutocompleteItem | null) => void;
   onChange?: (value: string) => void;
 }
@@ -21,12 +22,13 @@ export const Autocomplete: FC<AutocompleteProps> = ({
   placeholder = "Select an option",
   className = "",
   style = {},
+  disabled = false,
   onSelect,
   onChange,
 }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [filteredItems, setFilteredItems] = useState<AutocompleteItem[]>(items);
-  console.log({ filteredItems });
+  const disabledClass = disabled ? "opacity-50 cursor-not-allowed" : "";
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -42,8 +44,9 @@ export const Autocomplete: FC<AutocompleteProps> = ({
   return (
     <article className={`relative ${className}`} style={style}>
       <input
+        disabled={disabled}
         type="text"
-        className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200 ease-in-out"
+        className={`w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200 ease-in-out ${disabledClass}`}
         placeholder={placeholder}
         value={value}
         onChange={handleInputChange}
