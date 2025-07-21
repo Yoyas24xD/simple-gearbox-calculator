@@ -26,6 +26,7 @@ export const Header = () => {
       <header className="flex flex-col sm:flex-row items-center justify-between p-4 bg-gray-800 shadow-lg rounded-b-lg">
         <div className="mb-2 sm:mb-0 sm:mr-4 w-full sm:w-auto">
           <Autocomplete
+            key={setups.length}
             value={setup.name}
             items={
               setups.map((name) => ({
@@ -33,7 +34,6 @@ export const Header = () => {
                 value: name,
               })) ?? []
             }
-            listId="setup"
             onSelect={(item) => {
               if (!item) return;
               loadSetup(item.value);

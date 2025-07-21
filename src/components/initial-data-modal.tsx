@@ -63,9 +63,9 @@ export const InitialDataModal = () => {
         </Button>
         <article className="flex gap-2">
           <Autocomplete
+            key={setups.length}
             value={setup.name !== "New Setup" ? setup.name : ""}
             placeholder="Select a setup"
-            listId="setup"
             items={
               setups.map((name) => ({
                 label: name,

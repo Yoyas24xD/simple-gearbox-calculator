@@ -1,4 +1,4 @@
-import { type ChangeEvent, type CSSProperties, type FC } from "react";
+import { useState, type ChangeEvent, type CSSProperties, type FC } from "react";
 
 interface AutocompleteItem {
   label: string;
@@ -9,7 +9,6 @@ interface AutocompleteProps {
   value?: string;
   items: AutocompleteItem[];
   placeholder?: string;
-  listId: string;
   className?: string;
   style?: CSSProperties;
   onSelect: (item: AutocompleteItem | null) => void;
@@ -19,48 +18,53 @@ interface AutocompleteProps {
 export const Autocomplete: FC<AutocompleteProps> = ({
   value,
   items,
-  placeholder = "Setup name...",
-  listId,
+  placeholder = "Select an option",
   className = "",
   style = {},
   onSelect,
   onChange,
 }) => {
+  const [showOptions, setShowOptions] = useState(false);
+  const [filteredItems, setFilteredItems] = useState<AutocompleteItem[]>(items);
+  console.log({ filteredItems });
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     onChange?.(value);
 
-    const selectedItem = items.find(
-      (item) => item.value === value || item.label === value
+    setFilteredItems((prevItems) =>
+      prevItems.filter((item) =>
+        item.label.toLowerCase().includes(value.toLowerCase())
+      )
     );
-    if (selectedItem) {
-      onSelect(selectedItem);
-    } else {
-      onSelect(null);
-    }
   };
 
   return (
-    <div className={`relative ${className}`} style={style}>
+    <article className={`relative ${className}`} style={style}>
       <input
         type="text"
-        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200 ease-in-out"
         placeholder={placeholder}
         value={value}
         onChange={handleInputChange}
-        list={listId}
+        onFocus={() => setShowOptions(true)}
+        onBlur={() => setTimeout(() => setShowOptions(false), 100)}
+        autoComplete="off"
       />
-
-      <datalist
-        id={listId}
-        className="bg-white rounded-md shadow-lg border border-gray-200"
-      >
-        {items.map((item) => (
-          <option key={item.value} value={item.value}>
-            {item.label}
-          </option>
-        ))}
-      </datalist>
-    </div>
+      {showOptions && filteredItems.length > 0 && (
+        <ul className="absolute z-10 w-full bg-white border border-gray-200 rounded-lg shadow-xl mt-1 max-h-60 overflow-y-auto">
+          {filteredItems.map((item) => (
+            <option
+              key={item.value}
+              value={item.value}
+              className="p-3 text-gray-800 hover:bg-indigo-50 hover:text-indigo-700 cursor-pointer"
+              onClick={() => onSelect(item)}
+            >
+              {item.label}
+            </option>
+          ))}
+        </ul>
+      )}
+    </article>
   );
 };
