@@ -77,10 +77,15 @@ export const CarSetupProvider = ({ children }: { children: ReactNode }) => {
           loadSetup: async (name: string) => {
             const savedSetup = await storage.load(name);
             if (!savedSetup) {
-              console.warn(`No setup found for name: ${name}`);
+              toast.warning(`Setup "${name}" not found.`);
               return;
             }
             dispatch({ type: "UPDATE_ALL", setup: savedSetup });
+          },
+          deleteSetup: async (name: string) => {
+            await storage.remove(name);
+            toast.success(`Setup "${name}" deleted successfully!`);
+            dispatch({ type: "UPDATE_ALL", setup: INITIAL_SETUP });
           },
         }),
         [setup, dispatch]

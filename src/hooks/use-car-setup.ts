@@ -21,6 +21,7 @@ export interface CarSetupReducer {
   setSetup: (action: UpdateSetupAction) => void;
   persistSetup: () => void;
   loadSetup: (name: string) => void;
+  deleteSetup: (name: string) => void;
 }
 
 export const CarSetupContext = createContext<CarSetupReducer | null>(null);
