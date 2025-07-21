@@ -57,7 +57,6 @@ export const Header = () => {
             loadSetup(item.value);
           }}
           onChange={(value) => {
-            console.log(value);
             setSetup({
               type: "UPDATE_SETUP_NAME",
               name: value,
