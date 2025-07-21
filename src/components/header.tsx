@@ -21,54 +21,52 @@ export const Header = () => {
   }, []);
 
   return (
-    <>
+    <header className="flex flex-col sm:flex-row items-center justify-between p-4 bg-gray-800 shadow-lg rounded-b-lg">
       <GlobalConfig open={openConfig} onClose={() => setOpenConfig(false)} />
-      <header className="flex flex-col sm:flex-row items-center justify-between p-4 bg-gray-800 shadow-lg rounded-b-lg">
-        <div className="mb-2 sm:mb-0 sm:mr-4 w-full sm:w-auto">
-          <Autocomplete
-            key={setups.length}
-            value={setup.name}
-            items={
-              setups.map((name) => ({
-                label: name,
-                value: name,
-              })) ?? []
-            }
-            onSelect={(item) => {
-              if (!item) return;
-              loadSetup(item.value);
-            }}
-            onChange={(value) => {
-              console.log(value);
-              setSetup({
-                type: "UPDATE_SETUP_NAME",
-                name: value,
-              });
-            }}
-          />
-        </div>
+      <div className="mb-2 sm:mb-0 sm:mr-4 w-full sm:w-auto">
+        <Autocomplete
+          key={setups.length}
+          value={setup.name}
+          items={
+            setups.map((name) => ({
+              label: name,
+              value: name,
+            })) ?? []
+          }
+          onSelect={(item) => {
+            if (!item) return;
+            loadSetup(item.value);
+          }}
+          onChange={(value) => {
+            console.log(value);
+            setSetup({
+              type: "UPDATE_SETUP_NAME",
+              name: value,
+            });
+          }}
+        />
+      </div>
 
-        <div className="flex items-center space-x-2">
-          <Button
-            flavor="primary"
-            onClick={persistSetup}
-            className="ml-0 sm:ml-2"
-          >
-            Save Setup
-          </Button>
+      <div className="flex items-center space-x-2">
+        <Button
+          flavor="primary"
+          onClick={persistSetup}
+          className="ml-0 sm:ml-2"
+        >
+          Save Setup
+        </Button>
 
-          <Button
-            flavor="danger"
-            onClick={() => console.log("TODO: Delete setup")}
-          >
-            Delete Setup
-          </Button>
+        <Button
+          flavor="danger"
+          onClick={() => console.log("TODO: Delete setup")}
+        >
+          Delete Setup
+        </Button>
 
-          <Button onClick={() => setOpenConfig(true)}>
-            <img src={Gear} className="w-6 h-6" alt="config" />
-          </Button>
-        </div>
-      </header>
-    </>
+        <Button onClick={() => setOpenConfig(true)}>
+          <img src={Gear} className="w-6 h-6" alt="config" />
+        </Button>
+      </div>
+    </header>
   );
 };
