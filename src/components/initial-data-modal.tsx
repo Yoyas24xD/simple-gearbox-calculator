@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "sonner";
 import { useCarSetup, type CarSetup } from "../hooks/use-car-setup";
-import { Button } from "./ui/button";
-import { Autocomplete } from "./ui/autocomplete";
 import { useIndexedDB } from "../hooks/use-storage";
+import { Autocomplete } from "./ui/autocomplete";
+import { Button } from "./ui/button";
 
 const parseCsv = (csv: string): { rpm: number; torque: number }[] => {
   return csv

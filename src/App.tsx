@@ -31,41 +31,43 @@ export const App = () => {
   }
 
   return (
-    <main className="p-2">
+    <main>
       <Header />
-      <GearConfig />
-      <WheelConfig />
-      {config.hpTorqueGraph.show && (
-        <LineChartMultiple
-          style={{ height: config.hpTorqueGraph.height + "px" }}
-          lines={[
-            {
-              label: "torque",
-              color: "#4a90e2",
-              data: setup.data.map((point) => ({
-                key: Math.trunc(point.rpm),
-                value: point.torque,
-              })),
-            },
-            {
-              label: "hp",
-              color: "#e94e77",
-              data: dataWithHp.map((point) => ({
-                key: Math.trunc(point.rpm),
-                value: point.hp,
-              })),
-            },
-          ]}
-          xTickStep={125}
-          hidePoints={!config.hpTorqueGraph.showPoints}
-        />
-      )}
-      {config.gearsGraph.show && (
-        <GearsPlot
-          style={{ height: config.gearsGraph.height + "px" }}
-          data={dataWithHp}
-        />
-      )}
+      <section className="p-2">
+        <GearConfig />
+        <WheelConfig />
+        {config.hpTorqueGraph.show && (
+          <LineChartMultiple
+            style={{ height: config.hpTorqueGraph.height + "px" }}
+            lines={[
+              {
+                label: "torque",
+                color: "#4a90e2",
+                data: setup.data.map((point) => ({
+                  key: Math.trunc(point.rpm),
+                  value: point.torque,
+                })),
+              },
+              {
+                label: "hp",
+                color: "#e94e77",
+                data: dataWithHp.map((point) => ({
+                  key: Math.trunc(point.rpm),
+                  value: point.hp,
+                })),
+              },
+            ]}
+            xTickStep={125}
+            hidePoints={!config.hpTorqueGraph.showPoints}
+          />
+        )}
+        {config.gearsGraph.show && (
+          <GearsPlot
+            style={{ height: config.gearsGraph.height + "px" }}
+            data={dataWithHp}
+          />
+        )}
+      </section>
     </main>
   );
 };
