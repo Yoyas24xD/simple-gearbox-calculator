@@ -9,12 +9,14 @@ export interface GraphConfig {
 export interface GlobalConfig {
   hpTorqueGraph: GraphConfig;
   gearsGraph: GraphConfig;
+  speedGraph: GraphConfig;
   gearCount: number;
 }
 
 export type Action =
   | { type: "SET_HP_TORQUE_GRAPH"; payload: GraphConfig; skipSave?: boolean }
   | { type: "SET_GEARS_GRAPH"; payload: GraphConfig; skipSave?: boolean }
+  | { type: "SET_SPEED_GRAPH"; payload: GraphConfig; skipSave?: boolean }
   | { type: "SET_GEAR_COUNT"; payload: number; skipSave?: boolean }
   | { type: "SET_ALL"; payload: GlobalConfig; skipSave?: boolean };
 

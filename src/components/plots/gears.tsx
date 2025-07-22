@@ -1,4 +1,5 @@
-import type { CSSProperties, FC } from "react";
+import type { FC } from "react";
+import { GEARS_COLORS } from "../../config";
 import { useCarSetup } from "../../hooks/use-car-setup";
 import { computeSpeedFromRpm } from "../../hooks/use-gear-speed";
 import { useGlobalConfig } from "../../hooks/use-global-config";
@@ -7,21 +8,9 @@ import { LineChartMultiple } from "./line";
 interface Props {
   data: { hp: number; rpm: number; torque: number }[];
   className?: string;
-  style?: CSSProperties;
 }
 
-const GEARS_COLORS = [
-  "#4a90e2", // blue
-  "#e94e77", // pink
-  "#50e3c2", // teal
-  "#f5a623", // orange
-  "#b8e986", // light green
-  "#9013fe", // purple
-  "#f8e71c", // yellow
-  "#7ed321", // green
-];
-
-export const GearsPlot: FC<Props> = ({ data, className, style }) => {
+export const GearsPlot: FC<Props> = ({ data, className }) => {
   const { config } = useGlobalConfig();
   const { setup } = useCarSetup();
   const maxHp = Math.max(...data.map((d) => d.hp));
@@ -64,7 +53,7 @@ export const GearsPlot: FC<Props> = ({ data, className, style }) => {
 
   return (
     <LineChartMultiple
-      style={style}
+      style={{ height: config.gearsGraph.height + "px" }}
       className={className}
       lines={
         setup.gears.every((g) => g)

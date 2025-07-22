@@ -1,4 +1,10 @@
+import { useMemo } from "react";
 import { useCarSetup } from "./use-car-setup";
+
+interface GearSpeed {
+  rpm: number;
+  speed: number;
+}
 
 export const useGearSpeed = (rpm: number, gearRatio: number): number => {
   const { setup } = useCarSetup();
@@ -10,30 +16,40 @@ export const useGearSpeed = (rpm: number, gearRatio: number): number => {
   );
 };
 
-export const useGearSpeeds = (gearRatio: number): number[] => {
+export const useGearSpeeds = (gearRatio: number): GearSpeed[] => {
   const { setup } = useCarSetup();
-  return setup.data.map(({ rpm }) =>
-    computeSpeedFromRpm(
-      rpm,
-      setup.wheelCircumference,
-      gearRatio,
-      setup.finalDrive
-    )
+  return useMemo(
+    () =>
+      setup.data.map(({ rpm }) => ({
+        rpm,
+        speed: computeSpeedFromRpm(
+          rpm,
+          setup.wheelCircumference,
+          gearRatio,
+          setup.finalDrive
+        ),
+      })),
+    [setup.data, setup.wheelCircumference, gearRatio, setup.finalDrive]
   );
 };
 
-export const useGearsSpeeds = (): number[][] => {
+export const useGearsSpeeds = (): GearSpeed[][] => {
   const { setup } = useCarSetup();
 
-  return setup.gears.map((gearRatio) =>
-    setup.data.map(({ rpm }) =>
-      computeSpeedFromRpm(
-        rpm,
-        setup.wheelCircumference,
-        gearRatio,
-        setup.finalDrive
-      )
-    )
+  return useMemo(
+    () =>
+      setup.gears.map((gearRatio) =>
+        setup.data.map(({ rpm }) => ({
+          rpm,
+          speed: computeSpeedFromRpm(
+            rpm,
+            setup.wheelCircumference,
+            gearRatio,
+            setup.finalDrive
+          ),
+        }))
+      ),
+    [setup.gears, setup.data, setup.wheelCircumference, setup.finalDrive]
   );
 };
 

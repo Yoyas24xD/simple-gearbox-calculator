@@ -7,17 +7,16 @@ import {
 } from "../hooks/use-global-config";
 import { useLocalStorage } from "../hooks/use-storage";
 
+const DEFAULT_VALUES = {
+  height: 300,
+  show: true,
+  showPoints: true,
+};
+
 const DEFAULT_CONFIG = {
-  hpTorqueGraph: {
-    height: 300,
-    show: true,
-    showPoints: true,
-  },
-  gearsGraph: {
-    height: 300,
-    show: true,
-    showPoints: true,
-  },
+  hpTorqueGraph: DEFAULT_VALUES,
+  gearsGraph: DEFAULT_VALUES,
+  speedGraph: DEFAULT_VALUES,
   gearCount: 6,
 };
 
@@ -32,6 +31,11 @@ const reducer = (state: GlobalConfig, action: Action) => {
       return {
         ...state,
         gearsGraph: action.payload,
+      };
+    case "SET_SPEED_GRAPH":
+      return {
+        ...state,
+        speedGraph: action.payload,
       };
     case "SET_GEAR_COUNT":
       return {
