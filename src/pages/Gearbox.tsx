@@ -1,16 +1,16 @@
-import { GearConfig } from "./components/gear-config";
-import { Header } from "./components/header";
-import { InitialDataModal } from "./components/initial-data-modal";
-import { GearsPlot } from "./components/plots/gears";
-import { LineChartMultiple } from "./components/plots/line";
-import { SpeedPlot } from "./components/plots/speed";
-import { Divider } from "./components/ui/divider";
-import { WheelConfig } from "./components/wheel-config";
-import { useCarSetup } from "./hooks/use-car-setup";
-import { useGlobalConfig } from "./hooks/use-global-config";
-import { useHpLine } from "./hooks/use-hp-line";
+import { GearConfig } from "../components/gear-config";
+import { Header } from "../components/header";
+import { InitialDataModal } from "../components/initial-data-modal";
+import { GearsPlot } from "../components/plots/gears";
+import { LineChartMultiple } from "../components/plots/line";
+import { SpeedPlot } from "../components/plots/speed";
+import { Divider } from "../components/ui/divider";
+import { WheelConfig } from "../components/wheel-config";
+import { useCarSetup } from "../hooks/use-car-setup";
+import { useGlobalConfig } from "../hooks/use-global-config";
+import { useHpLine } from "../hooks/use-hp-line";
 
-export const App = () => {
+export const Gearbox = () => {
   const { config } = useGlobalConfig();
   const { setup } = useCarSetup();
   const hpLine = useHpLine(setup.data);
@@ -68,9 +68,7 @@ export const App = () => {
         )}
         {config.gearsGraph.show && (
           <>
-            <GearsPlot
-              data={dataWithHp}
-            />
+            <GearsPlot data={dataWithHp} />
             <Divider />
           </>
         )}
