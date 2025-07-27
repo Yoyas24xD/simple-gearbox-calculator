@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 
 export interface CarSetup {
-  data: { rpm: number; torque: number }[];
+  torqueLine: { rpm: number; torque: number }[];
   gears: number[];
   finalDrive: number;
   wheelCircumference: number;
@@ -9,7 +9,7 @@ export interface CarSetup {
 }
 
 export type UpdateSetupAction =
-  | { type: "UPDATE_DATA"; data: CarSetup["data"] }
+  | { type: "UPDATE_DATA"; data: CarSetup["torqueLine"] }
   | { type: "UPDATE_GEARS"; gears: number[] }
   | { type: "UPDATE_FINAL_DRIVE"; finalDrive: number }
   | { type: "UPDATE_WHEEL_CIRCUMFERENCE"; wheelCircumference: number }

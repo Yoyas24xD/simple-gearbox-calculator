@@ -13,15 +13,15 @@ import { useHpLine } from "../hooks/use-hp-line";
 export const Gearbox = () => {
   const { config } = useGlobalConfig();
   const { setup } = useCarSetup();
-  const hpLine = useHpLine(setup.data);
+  const hpLine = useHpLine(setup.torqueLine);
 
   // zip data and hpLine
-  const dataWithHp = setup.data.map((point, index) => ({
+  const dataWithHp = setup.torqueLine.map((point, index) => ({
     ...point,
     hp: hpLine[index],
   }));
 
-  if (setup.data.length === 0) {
+  if (setup.torqueLine.length === 0) {
     return (
       <main className="p-2">
         <InitialDataModal />
@@ -46,7 +46,7 @@ export const Gearbox = () => {
                 {
                   label: "torque",
                   color: "#4a90e2",
-                  data: setup.data.map((point) => ({
+                  data: setup.torqueLine.map((point) => ({
                     key: Math.trunc(point.rpm),
                     value: point.torque,
                   })),

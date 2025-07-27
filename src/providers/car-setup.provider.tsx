@@ -10,7 +10,7 @@ import { StorageFactory } from "../storage/storage-factory";
 import { toast } from "sonner";
 
 const INITIAL_SETUP: CarSetup = {
-  data: [],
+  torqueLine: [],
   gears: [],
   finalDrive: 3.5,
   wheelCircumference: 80,
@@ -47,7 +47,7 @@ export const CarSetupProvider = ({ children }: { children: ReactNode }) => {
         success: "Setup saved successfully!",
         error: "Failed to save setup.",
       }),
-    500
+    500,
   );
 
   useEffect(() => {
@@ -88,7 +88,7 @@ export const CarSetupProvider = ({ children }: { children: ReactNode }) => {
             dispatch({ type: "UPDATE_ALL", setup: INITIAL_SETUP });
           },
         }),
-        [setup, dispatch]
+        [setup, dispatch],
       )}
     >
       {children}
