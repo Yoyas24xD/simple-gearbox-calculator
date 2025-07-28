@@ -1,35 +1,57 @@
-import { Redirect } from "wouter";
+import { Input } from "../components/ui/input";
 import { useCarSetup } from "../hooks/use-car-setup";
 
 export const Suspension = () => {
   const { setup, setSetup } = useCarSetup();
 
   if (!setup.torqueLine.length) {
-    return <Redirect to="/" />;
+    console.warn(
+      "TODO: Setup not loaded, redirect not apply during development",
+    );
+    // return <Redirect to="/" />;
   }
   return (
     <section className="flex flex-col gap-4">
       <h1>Suspension Settings</h1>
-      <div>
-        <label htmlFor="weight">Weight Distribution</label>
-        <input
-          type="text"
-          id="weight"
-          value={setup.weightDistribution.join(", ")}
-          onChange={(e) =>
-            setSetup({
-              type: "UPDATE_WEIGHT_DISTRIBUTION",
-              weightDistribution: e.target.value.split(", ").map(Number) as [
-                number,
-                number,
-              ],
-            })
-          }
-        />
-      </div>
+      <article className="flex gap-2">
+        <div>
+          <label htmlFor="weight-distribution-front">Front weight</label>
+          <Input
+            type="text"
+            id="weight"
+            value={setup.weightDistribution[0]}
+            onChange={(e) =>
+              setSetup({
+                type: "UPDATE_WEIGHT_DISTRIBUTION",
+                weightDistribution: [
+                  Number(e.target.value),
+                  setup.weightDistribution[1],
+                ],
+              })
+            }
+          />
+        </div>
+        <div>
+          <label htmlFor="weight-distribution-rear">Rear weight</label>
+          <Input
+            type="text"
+            id="weight-distribution-rear"
+            value={setup.weightDistribution[1]}
+            onChange={(e) =>
+              setSetup({
+                type: "UPDATE_WEIGHT_DISTRIBUTION",
+                weightDistribution: [
+                  setup.weightDistribution[0],
+                  Number(e.target.value),
+                ],
+              })
+            }
+          />
+        </div>
+      </article>
       <div>
         <label htmlFor="wheelWeight">Wheel Weight</label>
-        <input
+        <Input
           type="number"
           id="wheelWeight"
           value={setup.wheelWeight}
@@ -43,7 +65,7 @@ export const Suspension = () => {
       </div>
       <div>
         <label htmlFor="weight">Total Weight</label>
-        <input
+        <Input
           type="number"
           id="weight"
           value={setup.weight}

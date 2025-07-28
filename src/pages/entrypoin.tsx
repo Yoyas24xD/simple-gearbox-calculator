@@ -7,8 +7,10 @@ export const Entrypoint = () => {
   return (
     <section>
       <h1>Welcome to the CarX Tools</h1>
-      <Link to="/gearbox">Go to Gearbox</Link>
-      <Link to="/suspension">Go to Suspension</Link>
+      <div className="flex gap-4">
+        <Link to="/gearbox">Go to Gearbox</Link>
+        <Link to="/suspension">Go to Suspension</Link>
+      </div>
     </section>
   );
 };
