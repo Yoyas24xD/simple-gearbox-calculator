@@ -6,14 +6,23 @@ export interface CarSetup {
   finalDrive: number;
   wheelCircumference: number;
   name: string;
+  weight: number;
+  weightDistribution: [front: number, rear: number];
+  wheelWeight: number;
 }
 
 export type UpdateSetupAction =
-  | { type: "UPDATE_DATA"; data: CarSetup["torqueLine"] }
+  | { type: "UPDATE_TORQUE_LINE"; data: CarSetup["torqueLine"] }
   | { type: "UPDATE_GEARS"; gears: number[] }
   | { type: "UPDATE_FINAL_DRIVE"; finalDrive: number }
   | { type: "UPDATE_WHEEL_CIRCUMFERENCE"; wheelCircumference: number }
   | { type: "UPDATE_SETUP_NAME"; name: string }
+  | { type: "UPDATE_WEIGHT"; weight: number }
+  | {
+      type: "UPDATE_WEIGHT_DISTRIBUTION";
+      weightDistribution: CarSetup["weightDistribution"];
+    }
+  | { type: "UPDATE_WHEEL_WEIGHT"; wheelWeight: number }
   | { type: "UPDATE_ALL"; setup: CarSetup };
 
 export interface CarSetupReducer {

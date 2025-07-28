@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useReducer, type ReactNode } from "react";
+import { toast } from "sonner";
 import {
   CarSetupContext,
   type CarSetup,
@@ -7,7 +8,6 @@ import {
 import { useDebounce } from "../hooks/use-debounce";
 import { useGlobalConfig } from "../hooks/use-global-config";
 import { StorageFactory } from "../storage/storage-factory";
-import { toast } from "sonner";
 
 const INITIAL_SETUP: CarSetup = {
   torqueLine: [],
@@ -15,12 +15,18 @@ const INITIAL_SETUP: CarSetup = {
   finalDrive: 3.5,
   wheelCircumference: 80,
   name: "New Setup",
+  weight: 1500,
+  weightDistribution: [50, 50],
+  wheelWeight: 15,
 };
 
-const carSetupReducer = (state: CarSetup, action: UpdateSetupAction) => {
+const carSetupReducer = (
+  state: CarSetup,
+  action: UpdateSetupAction,
+): CarSetup => {
   switch (action.type) {
-    case "UPDATE_DATA":
-      return { ...state, data: action.data };
+    case "UPDATE_TORQUE_LINE":
+      return { ...state, torqueLine: action.data };
     case "UPDATE_GEARS":
       return { ...state, gears: action.gears };
     case "UPDATE_FINAL_DRIVE":
@@ -31,6 +37,12 @@ const carSetupReducer = (state: CarSetup, action: UpdateSetupAction) => {
       return { ...state, name: action.name };
     case "UPDATE_ALL":
       return { ...state, ...action.setup };
+    case "UPDATE_WEIGHT":
+      return { ...state, weight: action.weight };
+    case "UPDATE_WEIGHT_DISTRIBUTION":
+      return { ...state, weightDistribution: action.weightDistribution };
+    case "UPDATE_WHEEL_WEIGHT":
+      return { ...state, wheelWeight: action.wheelWeight };
     default:
       throw new Error(`Unknown action type: ${action}`);
   }

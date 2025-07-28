@@ -49,7 +49,7 @@ export const InitialDataModal = () => {
           onClick={() => {
             const parsedData = parseCsv(csv);
             setSetup({
-              type: "UPDATE_DATA",
+              type: "UPDATE_TORQUE_LINE",
               data: parsedData,
             });
             setCsv("");
@@ -86,6 +86,6 @@ export const InitialDataModal = () => {
         </article>
       </div>
     </section>,
-    document.body
+    document.body,
   );
 };

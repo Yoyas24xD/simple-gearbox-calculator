@@ -1,9 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Toaster } from "sonner";
-import { Redirect, Route, Router, Switch } from "wouter";
-import { Gearbox } from "./pages/Gearbox.tsx";
+import { Route, Router, Switch } from "wouter";
 import "./index.css";
+import { Entrypoint } from "./pages/entrypoin.tsx";
+import { Gearbox } from "./pages/gearbox.tsx";
+import { Suspension } from "./pages/suspension.tsx";
 import { CarSetupProvider } from "./providers/car-setup.provider.tsx";
 import { GlobalConfigProvider } from "./providers/global-config.provider.tsx";
 
@@ -13,10 +15,10 @@ createRoot(document.getElementById("root")!).render(
       <CarSetupProvider>
         <Router base="/carx-tools">
           <Switch>
-            <Route path="/" component={() => <Redirect to="/gearbox" />} />
+            <Route path="/" component={Entrypoint} />
             <Route path="/gearbox" component={Gearbox} />
-            <Route path="/suspension">{() => <p>hola</p>}</Route>
-            <Route>{Gearbox}</Route> {/* default route */}
+            <Route path="/suspension" component={Suspension} />
+            <Route component={Entrypoint} /> {/* default route */}
           </Switch>
         </Router>
       </CarSetupProvider>
