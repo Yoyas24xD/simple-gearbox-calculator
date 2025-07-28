@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Toaster } from "sonner";
-import { Route, Router, Switch } from "wouter";
+import { Redirect, Route, Router, Switch } from "wouter";
 import { Gearbox } from "./pages/Gearbox.tsx";
 import "./index.css";
 import { CarSetupProvider } from "./providers/car-setup.provider.tsx";
@@ -11,10 +11,11 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <GlobalConfigProvider>
       <CarSetupProvider>
-        <Router base="/simple-gearbox-calculator">
+        <Router base="/carx-tools">
           <Switch>
-            <Route path="/" component={Gearbox} />
-            <Route path="/dampers">{() => <p>hola</p>}</Route>
+            <Route path="/" component={() => <Redirect to="/gearbox" />} />
+            <Route path="/gearbox" component={Gearbox} />
+            <Route path="/suspension">{() => <p>hola</p>}</Route>
             <Route>{Gearbox}</Route> {/* default route */}
           </Switch>
         </Router>
