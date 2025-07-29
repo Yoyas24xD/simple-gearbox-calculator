@@ -103,30 +103,18 @@ export const Suspension = () => {
           />
         </div>
       </section>
-      <h2>Calculated data</h2>
-      <section className="flex gap-2">
-        <div>
-          <label htmlFor="front-spring-stiffness">Front Spring Stiffness</label>
-          <Input
-            type="number"
-            id="front-spring-stiffness"
-            value={(frontSpringStiffness / 1000).toFixed(2)}
-            readOnly
-          />
-        </div>
-        <div>
-          <label htmlFor="rear-spring-stiffness">Rear Spring Stiffness</label>
-          <Input
-            type="number"
-            id="rear-spring-stiffness"
-            value={(rearSpringStiffness / 1000).toFixed(2)}
-            readOnly
-          />
-        </div>
-      </section>
-      <section>
-        <h3>Front Dampers</h3>
-        <article className="flex gap-4">
+      <section className="flex gap-3">
+        <article className="flex flex-col gap-4">
+          <h3>Front Dampers</h3>
+          <div>
+            <label htmlFor="front-spring-stiffness">Stiffness</label>
+            <Input
+              type="number"
+              id="front-spring-stiffness"
+              value={(frontSpringStiffness / 1000).toFixed(2)}
+              readOnly
+            />
+          </div>
           <div>
             <label htmlFor="front-bump">Bump</label>
             <Input
@@ -164,8 +152,17 @@ export const Suspension = () => {
             />
           </div>
         </article>
-        <h3>Rear Dampers</h3>
-        <article className="flex gap-4">
+        <article className="flex flex-col gap-4">
+          <h3>Rear Dampers</h3>
+          <div>
+            <label htmlFor="rear-spring-stiffness">Stiffness</label>
+            <Input
+              type="number"
+              id="rear-spring-stiffness"
+              value={(rearSpringStiffness / 1000).toFixed(2)}
+              readOnly
+            />
+          </div>
           <div>
             <label htmlFor="rear-bump">Bump</label>
             <Input

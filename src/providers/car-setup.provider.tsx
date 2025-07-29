@@ -17,7 +17,7 @@ const INITIAL_SETUP: CarSetup = {
   name: "New Setup",
   weight: 1500,
   weightDistribution: [50, 50],
-  wheelWeight: 15,
+  wheelWeight: 12,
 };
 
 const carSetupReducer = (
