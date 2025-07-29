@@ -21,64 +21,70 @@ export const Gearbox = () => {
     hp: hpLine[index],
   }));
 
+  // Render the initial data modal if torque data is empty
   if (setup.torqueLine.length === 0) {
     return (
-      <main className="p-2">
-        <InitialDataModal />
-        <div className="text-center text-gray-500">
-          Please enter RPM and torque data to start.
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center">
+        <div className="text-center py-12 px-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg border border-gray-200">
+          <InitialDataModal />
+          <p className="text-gray-600 text-lg mt-4">
+            Please enter RPM and torque data to start.
+          </p>
         </div>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main>
-      <Header />
-      <section className="p-2">
-        <GearConfig />
-        <WheelConfig />
-        {config.hpTorqueGraph.show && (
-          <>
-            <LineChartMultiple
-              style={{ height: config.hpTorqueGraph.height + "px" }}
-              lines={[
-                {
-                  label: "torque",
-                  color: "#4a90e2",
-                  data: setup.torqueLine.map((point) => ({
-                    key: Math.trunc(point.rpm),
-                    value: point.torque,
-                  })),
-                },
-                {
-                  label: "hp",
-                  color: "#e94e77",
-                  data: dataWithHp.map((point) => ({
-                    key: Math.trunc(point.rpm),
-                    value: point.hp,
-                  })),
-                },
-              ]}
-              xTickStep={125}
-              hidePoints={!config.hpTorqueGraph.showPoints}
-            />
-            <Divider />
-          </>
-        )}
-        {config.gearsGraph.show && (
-          <>
-            <GearsPlot data={dataWithHp} />
-            <Divider />
-          </>
-        )}
-        {config.speedGraph.show && (
-          <>
-            <SpeedPlot />
-            <Divider />
-          </>
-        )}
-      </section>
-    </main>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        <Header />
+
+        <section className="space-y-8 mt-8">
+          <GearConfig />
+          <WheelConfig />
+          {config.hpTorqueGraph.show && (
+            <>
+              <LineChartMultiple
+                style={{ height: config.hpTorqueGraph.height + "px" }}
+                lines={[
+                  {
+                    label: "torque",
+                    color: "#4a90e2",
+                    data: setup.torqueLine.map((point) => ({
+                      key: Math.trunc(point.rpm),
+                      value: point.torque,
+                    })),
+                  },
+                  {
+                    label: "hp",
+                    color: "#e94e77",
+                    data: dataWithHp.map((point) => ({
+                      key: Math.trunc(point.rpm),
+                      value: point.hp,
+                    })),
+                  },
+                ]}
+                xTickStep={125}
+                hidePoints={!config.hpTorqueGraph.showPoints}
+              />
+              <Divider />
+            </>
+          )}
+          {config.gearsGraph.show && (
+            <>
+              <GearsPlot data={dataWithHp} />
+              <Divider />
+            </>
+          )}
+          {config.speedGraph.show && (
+            <>
+              <SpeedPlot />
+              <Divider />
+            </>
+          )}
+        </section>
+      </div>
+    </div>
   );
 };

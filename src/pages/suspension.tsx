@@ -1,3 +1,6 @@
+import { ArrowLeft, Wrench } from "lucide-react";
+import type { JSX } from "react";
+import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { useCarSetup } from "../hooks/use-car-setup";
 
@@ -29,68 +32,15 @@ export const Suspension = () => {
     Math.sqrt(rearSpringStiffness * rearSprungMass) *
     DAMPING_RATIO;
 
-  if (!setup.torqueLine.length) {
-    console.warn(
-      "TODO: Setup not loaded, redirect not apply during development",
-    );
-    // return <Redirect to="/" />;
-  }
-  return (
-    <section className="gap-4">
-      <h1>Suspension Settings</h1>
-      <section className="flex gap-2">
-        <div>
-          <label htmlFor="weight-distribution-front">Front weight</label>
+  const renderGeneralParameters = (): JSX.Element => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-gray-900 mb-6 border-b pb-4 border-gray-200">
+        General Car Parameters
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
           <Input
-            type="number"
-            min={0}
-            max={100}
-            id="weight"
-            value={setup.weightDistribution[0]}
-            onChange={(e) => {
-              const value = Number(e.target.value);
-              setSetup({
-                type: "UPDATE_WEIGHT_DISTRIBUTION",
-                weightDistribution: [value, 100 - value],
-              });
-            }}
-          />
-        </div>
-        <div>
-          <label htmlFor="weight-distribution-rear">Rear weight</label>
-          <Input
-            min={0}
-            max={100}
-            type="number"
-            id="weight-distribution-rear"
-            value={setup.weightDistribution[1]}
-            onChange={(e) => {
-              const value = Number(e.target.value);
-
-              setSetup({
-                type: "UPDATE_WEIGHT_DISTRIBUTION",
-                weightDistribution: [100 - value, value],
-              });
-            }}
-          />
-        </div>
-        <div>
-          <label htmlFor="wheelWeight">Wheel Weight</label>
-          <Input
-            type="number"
-            id="wheelWeight"
-            value={setup.wheelWeight}
-            onChange={(e) =>
-              setSetup({
-                type: "UPDATE_WHEEL_WEIGHT",
-                wheelWeight: Number(e.target.value),
-              })
-            }
-          />
-        </div>
-        <div>
-          <label htmlFor="weight">Total Weight</label>
-          <Input
+            label="Total Weight (kg)"
             type="number"
             id="weight"
             value={setup.weight}
@@ -102,105 +52,151 @@ export const Suspension = () => {
             }
           />
         </div>
-      </section>
-      <section className="flex gap-3">
-        <article className="flex flex-col gap-4">
-          <h3>Front Dampers</h3>
-          <div>
-            <label htmlFor="front-spring-stiffness">Stiffness</label>
-            <Input
-              type="number"
-              id="front-spring-stiffness"
-              value={(frontSpringStiffness / 1000).toFixed(2)}
-              readOnly
-            />
+
+        <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
+          <Input
+            label="Wheel Weight (kg)"
+            type="number"
+            id="wheelWeight"
+            value={setup.wheelWeight}
+            onChange={(e) =>
+              setSetup({
+                type: "UPDATE_WHEEL_WEIGHT",
+                wheelWeight: Number(e.target.value),
+              })
+            }
+          />
+        </div>
+
+        <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
+          <Input
+            label="Front Weight Distribution (%)"
+            type="number"
+            min={0}
+            max={100}
+            id="weight-distribution-front"
+            value={setup.weightDistribution[0]}
+            onChange={(e) => {
+              const value = Number(e.target.value);
+              setSetup({
+                type: "UPDATE_WEIGHT_DISTRIBUTION",
+                weightDistribution: [value, 100 - value],
+              });
+            }}
+          />
+        </div>
+
+        <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
+          <Input
+            label="Rear Weight Distribution (%)"
+            type="number"
+            min={0}
+            max={100}
+            id="weight-distribution-rear"
+            value={setup.weightDistribution[1]}
+            onChange={(e) => {
+              const value = Number(e.target.value);
+              setSetup({
+                type: "UPDATE_WEIGHT_DISTRIBUTION",
+                weightDistribution: [100 - value, value],
+              });
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+
+  // Helper function for rendering a damper settings section (reusable for front and rear)
+  const renderDamperSection = (
+    title: string,
+    stiffness: number,
+    dampingCoefficient: number,
+  ): JSX.Element => (
+    <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-lg">
+      <h3 className="text-xl font-semibold text-gray-900 mb-4">{title}</h3>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Input
+          label="Stiffness (N/mm)"
+          type="number"
+          value={(stiffness / 1000).toFixed(2)} // Convert to N/mm
+          readOnly
+          className="text-blue-700 font-bold" // Highlight calculated values
+        />
+        <Input
+          label="Bump"
+          type="number"
+          value={Math.trunc((dampingCoefficient * 2) / 3)}
+          readOnly
+          className="text-blue-700 font-bold"
+        />
+        <Input
+          label="Fast Bump"
+          type="number"
+          value={Math.trunc((dampingCoefficient * 1) / 3)}
+          readOnly
+          className="text-blue-700 font-bold"
+        />
+        <Input
+          label="Rebound"
+          type="number"
+          value={Math.trunc((dampingCoefficient * 3) / 2)}
+          readOnly
+          className="text-blue-700 font-bold"
+        />
+        <Input
+          label="Fast Rebound"
+          type="number"
+          value={Math.trunc((dampingCoefficient * 3) / 4)}
+          readOnly
+          className="text-blue-700 font-bold"
+        />
+      </div>
+    </div>
+  );
+
+  if (!setup.torqueLine.length) {
+    console.warn("Setup not loaded, redirect not apply during development");
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 font-inter">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center space-x-4">
+            <div className="p-3 bg-gradient-to-br from-red-500 to-orange-600 rounded-xl shadow-lg">
+              <Wrench className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
+              Suspension Tuner
+            </h1>
           </div>
-          <div>
-            <label htmlFor="front-bump">Bump</label>
-            <Input
-              type="number"
-              id="front-bump"
-              value={Math.trunc((frontDampingCoefficient * 2) / 3)}
-              readOnly
-            />
+          {/* TODO: Back button logs to console, would use Link */}
+          <Button
+            flavor="ghost"
+            onClick={() => console.log("Navigate back to overview")}
+          >
+            <ArrowLeft className="inline-block mr-2" size={18} /> Back to Home
+          </Button>
+        </div>
+
+        <div className="space-y-8">
+          {renderGeneralParameters()}
+          <hr className="border-t-2 border-gray-200 my-8" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {renderDamperSection(
+              "Front Dampers",
+              frontSpringStiffness,
+              frontDampingCoefficient,
+            )}
+            {renderDamperSection(
+              "Rear Dampers",
+              rearSpringStiffness,
+              rearDampingCoefficient,
+            )}
           </div>
-          <div>
-            <label htmlFor="front-fast-bump">Fast bump</label>
-            <Input
-              type="number"
-              id="front-fast-bump"
-              value={Math.trunc((frontDampingCoefficient * 1) / 3)}
-              readOnly
-            />
-          </div>
-          <div>
-            <label htmlFor="front-rebound">Fast rebound</label>
-            <Input
-              type="number"
-              id="front-rebound"
-              value={Math.trunc((frontDampingCoefficient * 3) / 2)}
-              readOnly
-            />
-          </div>
-          <div>
-            <label htmlFor="front-fast-rebound">Fast rebound</label>
-            <Input
-              type="number"
-              id="front-fast-rebound"
-              value={Math.trunc((frontDampingCoefficient * 3) / 4)}
-              readOnly
-            />
-          </div>
-        </article>
-        <article className="flex flex-col gap-4">
-          <h3>Rear Dampers</h3>
-          <div>
-            <label htmlFor="rear-spring-stiffness">Stiffness</label>
-            <Input
-              type="number"
-              id="rear-spring-stiffness"
-              value={(rearSpringStiffness / 1000).toFixed(2)}
-              readOnly
-            />
-          </div>
-          <div>
-            <label htmlFor="rear-bump">Bump</label>
-            <Input
-              type="number"
-              id="rear-bump"
-              value={Math.trunc((rearDampingCoefficient * 2) / 3)}
-              readOnly
-            />
-          </div>
-          <div>
-            <label htmlFor="rear-fast-bump">Fast bump</label>
-            <Input
-              type="number"
-              id="rear-fast-bump"
-              value={Math.trunc((rearDampingCoefficient * 1) / 3)}
-              readOnly
-            />
-          </div>
-          <div>
-            <label htmlFor="rear-rebound">Fast rebound</label>
-            <Input
-              type="number"
-              id="rear-rebound"
-              value={Math.trunc((rearDampingCoefficient * 3) / 2)}
-              readOnly
-            />
-          </div>
-          <div>
-            <label htmlFor="rear-fast-rebound">Fast rebound</label>
-            <Input
-              type="number"
-              id="rear-fast-rebound"
-              value={Math.trunc((rearDampingCoefficient * 3) / 4)}
-              readOnly
-            />
-          </div>
-        </article>
-      </section>
-    </section>
+        </div>
+      </div>
+    </div>
   );
 };

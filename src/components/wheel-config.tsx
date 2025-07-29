@@ -34,7 +34,7 @@ export const WheelConfig = () => {
 
   const handleChange = (
     field: keyof WheelConfigState,
-    value: number | boolean
+    value: number | boolean,
   ) => {
     const newState = { ...state, [field]: value };
     setState(newState);
@@ -62,11 +62,18 @@ export const WheelConfig = () => {
     };
 
   return (
-    <section>
-      <h2>Wheel Configuration</h2>
-      <div className="flex gap-2 items-center">
-        <div className="w-[12ch]">
-          <label htmlFor="wheel-width">Wheel width:</label>
+    <section className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 mb-8">
+      <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        Wheel Configuration
+      </h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
+        <div>
+          <label
+            htmlFor="wheel-width"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Wheel width:
+          </label>
           <Input
             id="wheel-width"
             type="number"
@@ -74,8 +81,13 @@ export const WheelConfig = () => {
             onChange={createInputHandler("width")}
           />
         </div>
-        <div className="w-[12ch]">
-          <label htmlFor="wheel-profile">Wheel profile:</label>
+        <div>
+          <label
+            htmlFor="wheel-profile"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Wheel profile:
+          </label>
           <Input
             id="wheel-profile"
             type="number"
@@ -86,8 +98,13 @@ export const WheelConfig = () => {
             step={0.01}
           />
         </div>
-        <div className="w-[12ch]">
-          <label htmlFor="rim-diameter">Rim diameter:</label>
+        <div>
+          <label
+            htmlFor="rim-diameter"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Rim diameter:
+          </label>
           <Input
             id="rim-diameter"
             type="number"
@@ -95,19 +112,24 @@ export const WheelConfig = () => {
             onChange={createInputHandler("rimDiameter")}
           />
         </div>
-        <div className="flex gap-1 items-center">
-          <span>Is AWD: </span>
-          <Checkbox
-            checked={state.isAwd}
-            onChange={createInputHandler("isAwd")}
-          />
+        <div className="flex flex-col h-full justify-center">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Is AWD:
+          </label>
+          <div className="flex gap-2 items-center">
+            <Checkbox
+              checked={state.isAwd}
+              onChange={createInputHandler("isAwd")}
+            />
+            <span className="text-gray-700 text-sm">All-Wheel Drive</span>
+          </div>
         </div>
-        <div>
-          <p>
+        <div className="col-span-full">
+          <p className="text-gray-700 text-sm font-medium">
             Wheel Circumference:{" "}
-            <span className="text-amber-400">
+            <span className="text-blue-600 font-semibold text-base">
               {setup.wheelCircumference.toFixed(2)}
-            </span>{" "}
+            </span>
             mm
           </p>
         </div>

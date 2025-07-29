@@ -36,56 +36,66 @@ export const InitialDataModal = () => {
   if (!isOpen) return null;
 
   return createPortal(
-    <section className="absolute top-1/2 left-1/2 -translate-1/2 rounded-sm shadow bg-zinc-800 px-4 py-2 w-1/2">
-      <h3>Enter the extracted RPM + torque</h3>
-      <textarea
-        className="w-full h-full border border-zinc-600 text-white p-2 rounded outline-none"
-        rows={10}
-        value={csv}
-        onChange={(e) => setCsv(e.target.value)}
-      />
-      <div className="flex gap-4 py-2 items-center">
-        <Button
-          onClick={() => {
-            const parsedData = parseCsv(csv);
-            setSetup({
-              type: "UPDATE_TORQUE_LINE",
-              data: parsedData,
-            });
-            setCsv("");
-            setIsOpen(false);
-          }}
-          disabled={!csv.trim()}
-        >
-          Load Csv
-        </Button>
-        <article className="flex gap-2">
-          <Autocomplete
-            disabled={setups.length === 0}
-            key={setups.length}
-            value={setup.name !== "New Setup" ? setup.name : ""}
-            placeholder="Select a setup"
-            items={
-              setups.map((name) => ({
-                label: name,
-                value: name,
-              })) ?? []
-            }
-            onChange={(value) => {
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <section className="bg-white p-8 rounded-xl shadow-2xl max-w-lg w-full text-center">
+        <h3 className="text-2xl font-bold text-gray-900 mb-4">
+          Enter RPM + Torque Data
+        </h3>
+        <p className="text-gray-600 mb-6">
+          Paste your CSV data (RPM;Torque per line) or load an existing setup.
+        </p>
+        <textarea
+          className="w-full h-64 border border-gray-300 text-gray-800 p-3 rounded-lg outline-none focus:border-blue-500 focus:ring-blue-500 resize-y mb-4"
+          rows={10}
+          value={csv}
+          onChange={(e) => setCsv(e.target.value)}
+          placeholder="e.g., 1000;50&#10;2000;80&#10;3000;120"
+        />
+        <div className="flex flex-col sm:flex-row gap-4 py-2 items-center justify-center">
+          <Button
+            flavor="primary"
+            onClick={() => {
+              const parsedData = parseCsv(csv);
               setSetup({
-                type: "UPDATE_SETUP_NAME",
-                name: value,
+                type: "UPDATE_TORQUE_LINE",
+                data: parsedData,
               });
-            }}
-            onSelect={(item) => {
-              if (!item) return;
-              loadSetup(item.value);
+              setCsv("");
               setIsOpen(false);
             }}
-          />
-        </article>
-      </div>
-    </section>,
+            disabled={!csv.trim()}
+            className="w-full sm:w-auto flex-shrink-0"
+          >
+            Load CSV
+          </Button>
+          <div className="w-full sm:w-auto flex-grow">
+            <Autocomplete
+              disabled={setups.length === 0}
+              key={setups.length}
+              value={setup.name !== "New Setup" ? setup.name : ""}
+              placeholder="Or select an existing setup"
+              items={
+                setups.map((name) => ({
+                  label: name,
+                  value: name,
+                })) ?? []
+              }
+              onChange={(value) => {
+                setSetup({
+                  type: "UPDATE_SETUP_NAME",
+                  name: value,
+                });
+              }}
+              onSelect={(item) => {
+                if (!item) return;
+                loadSetup(item.value);
+                setIsOpen(false);
+              }}
+            />
+          </div>
+        </div>
+      </section>
+    </div>,
     document.body,
   );
 };

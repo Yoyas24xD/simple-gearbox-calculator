@@ -1,6 +1,6 @@
+import { Cog } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import Gear from "../assets/gear.svg";
 import { useCarSetup, type CarSetup } from "../hooks/use-car-setup";
 import { useIndexedDB } from "../hooks/use-storage";
 import { ConfirmModal } from "./confirm-modal";
@@ -23,10 +23,10 @@ export const Header = () => {
       setSetups(keys);
     };
     fetchSetups();
-  }, []);
+  }, [storage]);
 
   return (
-    <header className="flex flex-col sm:flex-row items-center justify-between p-4 bg-gray-800 shadow-lg rounded-b-lg">
+    <header className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white shadow-lg rounded-xl border border-gray-200 mb-8">
       <ConfirmModal
         title="Delete Setup"
         message={`Are you sure you want to delete the setup "${setup.name}"? This action cannot be undone.`}
@@ -42,7 +42,7 @@ export const Header = () => {
         onConfirm={persistSetup}
       />
       <GlobalConfig open={openConfig} onClose={() => setOpenConfig(false)} />
-      <div className="mb-2 sm:mb-0 sm:mr-4 w-full sm:w-auto">
+      <div className="mb-4 sm:mb-0 sm:mr-4 w-full sm:w-1/3 md:w-1/4">
         <Autocomplete
           key={setups.length}
           value={setup.name}
@@ -65,7 +65,7 @@ export const Header = () => {
         />
       </div>
 
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2 w-full sm:w-auto justify-end">
         <Button
           flavor="primary"
           onClick={() => {
@@ -79,11 +79,9 @@ export const Header = () => {
             }
             persistSetup();
           }}
-          className="ml-0 sm:ml-2"
         >
           Save Setup
         </Button>
-
         <Button
           flavor="danger"
           disabled={setup.name === "New Setup"}
@@ -91,9 +89,8 @@ export const Header = () => {
         >
           Delete Setup
         </Button>
-
-        <Button onClick={() => setOpenConfig(true)}>
-          <img src={Gear} className="w-6 h-6" alt="config" />
+        <Button onClick={() => setOpenConfig(true)} className="p-2">
+          <Cog className="w-6 h-6 text-white" />
         </Button>
       </div>
     </header>
