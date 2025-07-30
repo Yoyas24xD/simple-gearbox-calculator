@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import type cars from "../data/cars.json";
 
 export interface CarSetup {
   torqueLine: { rpm: number; torque: number }[];
@@ -9,6 +10,7 @@ export interface CarSetup {
   weight: number;
   weightDistribution: [front: number, rear: number];
   wheelWeight: number;
+  baseCar: (typeof cars)[number] | null;
 }
 
 export type UpdateSetupAction =
@@ -23,6 +25,7 @@ export type UpdateSetupAction =
       weightDistribution: CarSetup["weightDistribution"];
     }
   | { type: "UPDATE_WHEEL_WEIGHT"; wheelWeight: number }
+  | { type: "UPDATE_BASE_CAR"; baseCar: CarSetup["baseCar"] }
   | { type: "UPDATE_ALL"; setup: CarSetup };
 
 export interface CarSetupReducer {
@@ -31,6 +34,7 @@ export interface CarSetupReducer {
   persistSetup: () => void;
   loadSetup: (name: string) => void;
   deleteSetup: (name: string) => void;
+  attachToCar: (car: CarSetup["baseCar"]) => void;
 }
 
 export const CarSetupContext = createContext<CarSetupReducer | null>(null);

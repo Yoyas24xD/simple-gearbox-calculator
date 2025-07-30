@@ -18,6 +18,7 @@ const INITIAL_SETUP: CarSetup = {
   weight: 1500,
   weightDistribution: [50, 50],
   wheelWeight: 12,
+  baseCar: null, // Initially no car is attached
 };
 
 const carSetupReducer = (
@@ -43,6 +44,11 @@ const carSetupReducer = (
       return { ...state, weightDistribution: action.weightDistribution };
     case "UPDATE_WHEEL_WEIGHT":
       return { ...state, wheelWeight: action.wheelWeight };
+    case "UPDATE_BASE_CAR":
+      return {
+        ...state,
+        baseCar: action.baseCar ? { ...action.baseCar } : null, // TODO: maybe dont need to clone here
+      };
     default:
       throw new Error(`Unknown action type: ${action}`);
   }
@@ -77,7 +83,7 @@ export const CarSetupProvider = ({ children }: { children: ReactNode }) => {
         gears: setup.gears.slice(0, config.gearCount),
       });
     }
-  }, [config.gearCount]);
+  }, [config.gearCount, setup.gears]);
 
   return (
     <CarSetupContext.Provider
@@ -99,8 +105,20 @@ export const CarSetupProvider = ({ children }: { children: ReactNode }) => {
             toast.success(`Setup "${name}" deleted successfully!`);
             dispatch({ type: "UPDATE_ALL", setup: INITIAL_SETUP });
           },
+          attachToCar: (car: CarSetup["baseCar"]) => {
+            dispatch({
+              type: "UPDATE_ALL",
+              setup: {
+                ...INITIAL_SETUP,
+                baseCar: car ? { ...car } : null,
+                torqueLine:
+                  car?.engine.default_torque_line ?? INITIAL_SETUP.torqueLine,
+                gears: Array(car?.transmission.gears ?? 0).fill(0),
+              },
+            });
+          },
         }),
-        [setup, dispatch],
+        [setup, dispatch, storage],
       )}
     >
       {children}
