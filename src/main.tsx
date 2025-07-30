@@ -3,7 +3,10 @@ import { createRoot } from "react-dom/client";
 import { Toaster } from "sonner";
 import { Route, Router, Switch } from "wouter";
 import "./index.css";
-import { Entrypoint } from "./pages/entrypoin.tsx";
+import { NewSetup } from "./pages/new-setup.tsx";
+import { Overview } from "./pages/overview.tsx";
+import { SavedSetups } from "./pages/saved-setups.tsx";
+import { HOCEntrypoint } from "./components/hoc/entrypoin.tsx";
 import { Gearbox } from "./pages/gearbox.tsx";
 import { Suspension } from "./pages/suspension.tsx";
 import { CarSetupProvider } from "./providers/car-setup.provider.tsx";
@@ -15,10 +18,15 @@ createRoot(document.getElementById("root")!).render(
       <CarSetupProvider>
         <Router base="/carx-tools">
           <Switch>
-            <Route path="/" component={Entrypoint} />
+            <Route path="/" component={HOCEntrypoint(Overview)} />
+            <Route path="/new-setup" component={HOCEntrypoint(NewSetup)} />
+            <Route
+              path="/saved-setups"
+              component={HOCEntrypoint(SavedSetups)}
+            />
             <Route path="/gearbox" component={Gearbox} />
             <Route path="/suspension" component={Suspension} />
-            <Route component={Entrypoint} /> {/* default route */}
+            <Route component={HOCEntrypoint(Overview)} /> {/* default route */}
           </Switch>
         </Router>
       </CarSetupProvider>
