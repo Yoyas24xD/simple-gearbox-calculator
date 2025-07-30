@@ -13,7 +13,8 @@ export class IndexedDBStrategy<T = unknown> implements StorageStrategy<T> {
   constructor() {
     this.initializeDB();
   }
-  keys(): Promise<string[]> {
+  async keys(): Promise<string[]> {
+    await this.initializeDB();
     const store = this.getObjectStore("readonly");
     const request = store.getAllKeys();
     return new Promise((resolve, reject) => {
@@ -22,7 +23,7 @@ export class IndexedDBStrategy<T = unknown> implements StorageStrategy<T> {
     });
   }
 
-  private async initializeDB(): Promise<void> {
+  private initializeDB(): Promise<void> {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(this.dbName, 1);
 
@@ -111,7 +112,7 @@ export class IndexedDBStrategy<T = unknown> implements StorageStrategy<T> {
   private notifyListeners(
     key: string,
     value: T | null,
-    event: StorageEventType
+    event: StorageEventType,
   ): void {
     this.listeners.forEach((handler) => handler(key, value, event));
   }
