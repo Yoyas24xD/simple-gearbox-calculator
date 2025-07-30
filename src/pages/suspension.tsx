@@ -1,5 +1,6 @@
 import { ArrowLeft, Wrench } from "lucide-react";
 import type { JSX } from "react";
+import { useLocation } from "wouter";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { useCarSetup } from "../hooks/use-car-setup";
@@ -9,6 +10,7 @@ const DAMPING_RATIO = 1;
 
 export const Suspension = () => {
   const { setup, setSetup } = useCarSetup();
+  const [, navigate] = useLocation();
 
   // Front suspension calculations
   const frontWeight = (setup.weightDistribution[0] / 100) * setup.weight;
@@ -171,11 +173,7 @@ export const Suspension = () => {
               Suspension Tuner
             </h1>
           </div>
-          {/* TODO: Back button logs to console, would use Link */}
-          <Button
-            flavor="ghost"
-            onClick={() => console.log("Navigate back to overview")}
-          >
+          <Button flavor="ghost" onClick={() => navigate("/")}>
             <ArrowLeft className="inline-block mr-2" size={18} /> Back to Home
           </Button>
         </div>

@@ -1,8 +1,12 @@
-import { Car, FileText, Plus, Settings } from "lucide-react";
+import { AlertCircle, Car, FileText, Plus } from "lucide-react";
 import { useLocation } from "wouter";
+import cars from "../data/cars.json";
+import { useSetups } from "../hooks/use-setups";
 
 export const Overview = () => {
   const [, navigate] = useLocation();
+  const setups = useSetups();
+
   return (
     <div className="space-y-8">
       <div className="text-center space-y-4">
@@ -26,25 +30,32 @@ export const Overview = () => {
           <div className="flex items-center space-x-3">
             <Car className="w-8 h-8 text-blue-600" />
             <div>
-              <p className="text-2xl font-bold text-blue-900">45</p>
+              <p className="text-2xl font-bold text-blue-900">{cars.length}</p>
               <p className="text-blue-700 text-sm">Available Cars</p>
             </div>
           </div>
         </div>
-        <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border border-green-200">
-          <div className="flex items-center space-x-3">
-            <Settings className="w-8 h-8 text-green-600" />
-            <div>
-              <p className="text-2xl font-bold text-green-900">120</p>
-              <p className="text-green-700 text-sm">Predefined Setups</p>
-            </div>
+        <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-xl border border-yellow-200 flex flex-col justify-center items-center text-center">
+          <div className="flex items-center space-x-3 mb-2">
+            <AlertCircle className="w-8 h-8 text-yellow-600" />{" "}
+            {/* A warning/info icon */}
+            <p className="text-2xl font-bold text-yellow-900">
+              Under Development
+            </p>
           </div>
+          <p className="text-yellow-700 text-sm mt-1">
+            We're actively working on adding more features and data. Check back
+            soon for updates!
+          </p>
         </div>
+
         <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border border-purple-200">
           <div className="flex items-center space-x-3">
             <FileText className="w-8 h-8 text-purple-600" />
             <div>
-              <p className="text-2xl font-bold text-purple-900">8</p>
+              <p className="text-2xl font-bold text-purple-900">
+                {setups.length}
+              </p>
               <p className="text-purple-700 text-sm">Saved Setups</p>
             </div>
           </div>

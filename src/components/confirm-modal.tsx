@@ -18,20 +18,20 @@ export const ConfirmModal: FC<Props> = ({
 }) => {
   if (!open) return null;
   return createPortal(
-    <div className="fixed inset-0 flex items-center justify-center shadow-lg bg-black/50">
-      <div className="bg-indigo-950 p-6 rounded shadow-lg">
-        <h2 className="text-lg font-semibold mb-4">{title}</h2>
-        <p className="mb-4">{message}</p>
-        <div className="flex justify-end space-x-2">
-          <Button onClick={onCancel} flavor="secondary">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white p-8 rounded-xl shadow-2xl text-center max-w-sm w-full">
+        <h3 className="text-xl font-bold text-gray-900 mb-4">{title}</h3>
+        <p className="text-gray-600 mb-6">{message}</p>
+        <div className="flex justify-center space-x-4">
+          <Button flavor="ghost" onClick={onCancel}>
             Cancel
           </Button>
-          <Button onClick={onConfirm} flavor="danger">
+          <Button flavor="danger" onClick={onConfirm}>
             Confirm
           </Button>
         </div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };
