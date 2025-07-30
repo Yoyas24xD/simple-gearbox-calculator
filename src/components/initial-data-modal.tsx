@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
-import { useCarSetup, type CarSetup } from "../hooks/use-car-setup";
-import { useIndexedDB } from "../hooks/use-storage";
+import { useCarSetup } from "../hooks/use-car-setup";
+import { useSetups } from "../hooks/use-setups";
 import { Autocomplete } from "./ui/autocomplete";
 import { Button } from "./ui/button";
 
@@ -21,17 +21,7 @@ export const InitialDataModal = () => {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [csv, setCsv] = useState<string>("");
   const { setup, setSetup, loadSetup } = useCarSetup();
-  const storage = useIndexedDB<CarSetup[]>("setups");
-  const [setups, setSetups] = useState<string[]>([]);
-
-  const fetchSetups = async () => {
-    const keys = await storage.keys();
-    setSetups(keys);
-  };
-
-  useEffect(() => {
-    fetchSetups();
-  }, []);
+  const setups = useSetups();
 
   if (!isOpen) return null;
 

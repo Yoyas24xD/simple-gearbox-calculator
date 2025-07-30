@@ -1,8 +1,8 @@
 import { Cog } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
-import { useCarSetup, type CarSetup } from "../hooks/use-car-setup";
-import { useIndexedDB } from "../hooks/use-storage";
+import { useCarSetup } from "../hooks/use-car-setup";
+import { useSetups } from "../hooks/use-setups";
 import { ConfirmModal } from "./confirm-modal";
 import { GlobalConfig } from "./global-config";
 import { Autocomplete } from "./ui/autocomplete";
@@ -12,18 +12,9 @@ export const Header = () => {
   const [openConfig, setOpenConfig] = useState(false);
   const { setup, setSetup, persistSetup, loadSetup, deleteSetup } =
     useCarSetup();
-  const storage = useIndexedDB<CarSetup>(setup.name);
-  const [setups, setSetups] = useState<string[]>([]);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [overwriteOpen, setOverwriteOpen] = useState(false);
-
-  useEffect(() => {
-    const fetchSetups = async () => {
-      const keys = await storage.keys();
-      setSetups(keys);
-    };
-    fetchSetups();
-  }, [storage]);
+  const setups = useSetups();
 
   return (
     <header className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white shadow-lg rounded-xl border border-gray-200 mb-8">
