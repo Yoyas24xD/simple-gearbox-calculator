@@ -18,7 +18,7 @@ export const ConfirmModal: FC<Props> = ({
 }) => {
   if (!open) return null;
   return createPortal(
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div className="bg-white p-8 rounded-xl shadow-2xl text-center max-w-sm w-full">
         <h3 className="text-xl font-bold text-gray-900 mb-4">{title}</h3>
         <p className="text-gray-600 mb-6">{message}</p>
