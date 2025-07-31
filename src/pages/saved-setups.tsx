@@ -1,10 +1,10 @@
 import { FileText, Settings } from "lucide-react";
-import { useLocation } from "wouter";
-import { Button } from "../components/ui/button";
-import { ConfirmModal } from "../components/confirm-modal";
 import { useState } from "react";
-import { useSetups } from "../hooks/use-setups";
+import { useLocation } from "wouter";
+import { ConfirmModal } from "../components/confirm-modal";
+import { Button } from "../components/ui/button";
 import { useCarSetup } from "../hooks/use-car-setup";
+import { useSetups } from "../hooks/use-setups";
 
 // const savedSetups = [
 //   {
@@ -32,9 +32,10 @@ import { useCarSetup } from "../hooks/use-car-setup";
 
 export const SavedSetups = () => {
   const [, navigate] = useLocation();
-  const { deleteSetup } = useCarSetup();
+  const { deleteSetup, loadSetup } = useCarSetup();
   const [setupToDelete, setSetupToDelete] = useState<string | null>(null);
   const setups = useSetups();
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -75,7 +76,11 @@ export const SavedSetups = () => {
                 >
                   Delete
                 </Button>
-                <Button flavor="success" size="sm">
+                <Button
+                  flavor="success"
+                  size="sm"
+                  onClick={() => loadSetup(setup)}
+                >
                   Open
                 </Button>
               </div>

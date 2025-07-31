@@ -3,10 +3,17 @@ import { useLocation } from "wouter";
 import cars from "../data/cars.json";
 import { useSetups } from "../hooks/use-setups";
 import Logo from "../assets/logo-ae86.webp";
+import { useCarSetup } from "../hooks/use-car-setup";
+import { useEffect } from "react";
 
 export const Overview = () => {
   const [, navigate] = useLocation();
   const setups = useSetups();
+  const { clearSetup } = useCarSetup();
+
+  useEffect(() => {
+    clearSetup();
+  }, [clearSetup]);
 
   return (
     <div className="space-y-8">
@@ -15,7 +22,7 @@ export const Overview = () => {
           <img
             src={Logo}
             alt="CarX Tools Logo"
-            className="w-32 h-32 rounded-full shadow-lg"
+            className="w-64 h-64 rounded-full shadow-lg"
           />
         </div>
         <p className="text-gray-600 text-lg max-w-2xl mx-auto">

@@ -117,6 +117,9 @@ export const CarSetupProvider = ({ children }: { children: ReactNode }) => {
               },
             });
           },
+          clearSetup: () => {
+            dispatch({ type: "UPDATE_ALL", setup: INITIAL_SETUP });
+          },
         }),
         [setup, dispatch, storage],
       )}

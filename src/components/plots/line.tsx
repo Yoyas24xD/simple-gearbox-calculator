@@ -65,7 +65,7 @@ export const LineChartMultiple: FC<Props> = ({
   const xTicks = xScale
     .ticks(Math.ceil((maxKey - minKey) / xTickStep)) // Calcular el número de ticks basado en el paso
     .filter(
-      (tick) => tick % xTickStep === 0 || tick === minKey || tick === maxKey
+      (tick) => tick % xTickStep === 0 || tick === minKey || tick === maxKey,
     ); // Asegurar que los ticks sean múltiplos del paso o los extremos
 
   return (
@@ -81,9 +81,7 @@ export const LineChartMultiple: FC<Props> = ({
               className="w-4 h-1 rounded-full"
               style={{ backgroundColor: lineData.color }}
             ></div>
-            <span className="text-xs text-gray-700 dark:text-gray-300">
-              {lineData.label}
-            </span>
+            <span className="text-xs text-gray-700">{lineData.label}</span>
           </div>
         ))}
       </div>
@@ -116,7 +114,7 @@ export const LineChartMultiple: FC<Props> = ({
                 top: `${yScale(+value)}%`,
                 left: "0%",
               }}
-              className="absolute text-xs tabular-nums -translate-y-1/2 text-gray-500 w-full text-right pr-2"
+              className="absolute text-xs tabular-nums -translate-y-1/2 text-gray-700 w-full text-right pr-2"
             >
               {value}
             </div>
@@ -145,7 +143,7 @@ export const LineChartMultiple: FC<Props> = ({
               .map((active, i) => (
                 <g
                   transform={`translate(0,${yScale(+active)})`}
-                  className="text-zinc-300 dark:text-zinc-700"
+                  className="text-zinc-400"
                   key={i}
                 >
                   <line
@@ -182,7 +180,7 @@ export const LineChartMultiple: FC<Props> = ({
                       fill="none"
                       stroke={line.color}
                     />
-                  ))
+                  )),
                 )
               : null}
           </svg>

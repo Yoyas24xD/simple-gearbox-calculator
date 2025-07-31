@@ -1,7 +1,5 @@
-import { ArrowLeft, Wrench } from "lucide-react";
 import type { JSX } from "react";
-import { useLocation } from "wouter";
-import { Button } from "../components/ui/button";
+import { Header } from "../components/header";
 import { Input } from "../components/ui/input";
 import { useCarSetup } from "../hooks/use-car-setup";
 
@@ -10,7 +8,6 @@ const DAMPING_RATIO = 1;
 
 export const Suspension = () => {
   const { setup, setSetup } = useCarSetup();
-  const [, navigate] = useLocation();
 
   // Front suspension calculations
   const frontWeight = (setup.weightDistribution[0] / 100) * setup.weight;
@@ -123,61 +120,44 @@ export const Suspension = () => {
           type="number"
           value={(stiffness / 1000).toFixed(2)} // Convert to N/mm
           readOnly
-          className="text-blue-700 font-bold" // Highlight calculated values
+          className="!text-blue-700 font-bold" // Highlight calculated values
         />
         <Input
           label="Bump"
           type="number"
           value={Math.trunc((dampingCoefficient * 2) / 3)}
           readOnly
-          className="text-blue-700 font-bold"
+          className="!text-blue-700 font-bold"
         />
         <Input
           label="Fast Bump"
           type="number"
           value={Math.trunc((dampingCoefficient * 1) / 3)}
           readOnly
-          className="text-blue-700 font-bold"
+          className="!text-blue-700 font-bold"
         />
         <Input
           label="Rebound"
           type="number"
           value={Math.trunc((dampingCoefficient * 3) / 2)}
           readOnly
-          className="text-blue-700 font-bold"
+          className="!text-blue-700 font-bold"
         />
         <Input
           label="Fast Rebound"
           type="number"
           value={Math.trunc((dampingCoefficient * 3) / 4)}
           readOnly
-          className="text-blue-700 font-bold"
+          className="!text-blue-700 font-bold"
         />
       </div>
     </div>
   );
 
-  if (!setup.torqueLine.length) {
-    console.warn("Setup not loaded, redirect not apply during development");
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 font-inter">
+      <Header />
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center space-x-4">
-            <div className="p-3 bg-gradient-to-br from-red-500 to-orange-600 rounded-xl shadow-lg">
-              <Wrench className="w-8 h-8 text-white" />
-            </div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
-              Suspension Tuner
-            </h1>
-          </div>
-          <Button flavor="ghost" onClick={() => navigate("/")}>
-            <ArrowLeft className="inline-block mr-2" size={18} /> Back to Home
-          </Button>
-        </div>
-
         <div className="space-y-8">
           {renderGeneralParameters()}
           <hr className="border-t-2 border-gray-200 my-8" />

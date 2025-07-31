@@ -1,7 +1,5 @@
-import { Plus } from "lucide-react";
 import { useRef } from "react";
 import { useCarSetup } from "../hooks/use-car-setup";
-import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
 export const GearConfig = () => {
@@ -62,14 +60,6 @@ export const GearConfig = () => {
             </div>
           </div>
         ))}
-        <div className="col-span-full sm:col-span-1 flex items-end">
-          <Button
-            flavor="ghost"
-            className="w-full h-full border border-dashed border-gray-300 hover:border-blue-500 text-gray-500 hover:text-blue-600 py-3"
-          >
-            <Plus className="w-5 h-5 mr-1" /> Add Gear
-          </Button>
-        </div>
       </div>
     </section>
   );

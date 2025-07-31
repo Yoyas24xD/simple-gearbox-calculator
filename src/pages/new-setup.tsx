@@ -1,11 +1,19 @@
 import { useLocation } from "wouter";
 import { Button } from "../components/ui/button";
 import cars from "../data/cars.json";
+import { SetupNameModal } from "../components/setup-name-modal";
+import { useState } from "react";
+import { useCarSetup, type CarSetup } from "../hooks/use-car-setup";
+import { toast } from "sonner";
 
 export const NewSetup = () => {
   const [, navigate] = useLocation();
+  const [selectedCar, setSelectedCar] = useState<CarSetup["baseCar"] | null>(
+    null,
+  );
+  const { setSetup, attachToCar } = useCarSetup();
   return (
-    <div className="space-y-6">
+    <section className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900">Create New Setup</h2>
         <Button flavor="ghost" onClick={() => navigate("/")}>
@@ -40,16 +48,34 @@ export const NewSetup = () => {
                 <Button
                   flavor="primary"
                   fullWidth
-                  onClick={() =>
-                    navigate(`/new-setup/${car.car}`, { state: { car } })
-                  } // TODO: Implement setup creation logic
+                  onClick={() => setSelectedCar(car)}
                 >
-                  Use This Setup
+                  Use this car
                 </Button>
               </div>
             </div>
           ))}
       </div>
-    </div>
+      <SetupNameModal
+        open={!!selectedCar}
+        onClose={() => setSelectedCar(null)}
+        onConfirm={(name) => {
+          if (!selectedCar) return;
+          attachToCar(selectedCar);
+          setSetup({
+            type: "UPDATE_SETUP_NAME",
+            name,
+          });
+          toast.info("The engine's default torque line has been loaded.", {
+            description:
+              "For a more precise simulation, please upload your car's updated torque line if you've made any modifications.",
+            closeButton: true,
+            duration: 10_000,
+          });
+          setSelectedCar(null);
+          navigate("/gearbox");
+        }}
+      />
+    </section>
   );
 };

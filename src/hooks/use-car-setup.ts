@@ -35,6 +35,7 @@ export interface CarSetupReducer {
   loadSetup: (name: string) => void;
   deleteSetup: (name: string) => void;
   attachToCar: (car: CarSetup["baseCar"]) => void;
+  clearSetup: () => void;
 }
 
 export const CarSetupContext = createContext<CarSetupReducer | null>(null);
