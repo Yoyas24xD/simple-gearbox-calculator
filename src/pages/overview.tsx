@@ -2,6 +2,7 @@ import { AlertCircle, Car, FileText, Plus } from "lucide-react";
 import { useLocation } from "wouter";
 import cars from "../data/cars.json";
 import { useSetups } from "../hooks/use-setups";
+import Logo from "../assets/logo-ae86.webp";
 
 export const Overview = () => {
   const [, navigate] = useLocation();
@@ -11,13 +12,12 @@ export const Overview = () => {
     <div className="space-y-8">
       <div className="text-center space-y-4">
         <div className="flex justify-center mb-6">
-          <div className="p-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl shadow-lg">
-            <Car className="w-12 h-12 text-white" />
-          </div>
+          <img
+            src={Logo}
+            alt="CarX Tools Logo"
+            className="w-32 h-32 rounded-full shadow-lg"
+          />
         </div>
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-          CarX Tools
-        </h1>
         <p className="text-gray-600 text-lg max-w-2xl mx-auto">
           The ultimate tool for optimizing your CarX setups. Adjust suspension,
           gearbox, and more with precision.
