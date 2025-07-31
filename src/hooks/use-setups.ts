@@ -7,9 +7,14 @@ export const useSetups = () => {
   const storage = StorageFactory.getStorage<CarSetup>("indexeddb");
 
   useEffect(() => {
-    const fetchSetups = async () => setSetups(await storage.keys());
+    const clear = storage.addChangeListener(() => {
+      storage.keys().then(setSetups);
+    });
 
+    const fetchSetups = async () => setSetups(await storage.keys());
     fetchSetups();
+
+    return clear;
   }, [storage]);
 
   return setups;
