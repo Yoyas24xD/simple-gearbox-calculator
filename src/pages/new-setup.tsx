@@ -40,7 +40,9 @@ export const NewSetup = () => {
                 <Button
                   flavor="primary"
                   fullWidth
-                  onClick={() => navigate(`/new-setup/${car.car}`)} // TODO: Implement setup creation logic
+                  onClick={() =>
+                    navigate(`/new-setup/${car.car}`, { state: { car } })
+                  } // TODO: Implement setup creation logic
                 >
                   Use This Setup
                 </Button>

@@ -15,7 +15,7 @@ const parseCsv = (csv: string): { rpm: number; torque: number }[] => {
     });
 };
 
-export const InitialDataModal: FC<{ open: boolean; onClose: () => void }> = ({
+export const UpdateTorqueModal: FC<{ open: boolean; onClose: () => void }> = ({
   open,
   onClose,
 }) => {
