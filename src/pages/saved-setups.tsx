@@ -1,33 +1,40 @@
 import { FileText, Settings } from "lucide-react";
 import { useLocation } from "wouter";
 import { Button } from "../components/ui/button";
+import { ConfirmModal } from "../components/confirm-modal";
+import { useState } from "react";
+import { useSetups } from "../hooks/use-setups";
+import { useCarSetup } from "../hooks/use-car-setup";
 
-const savedSetups = [
-  {
-    id: 1,
-    name: "My Drift Setup #1",
-    car: "Nissan 370Z",
-    lastModified: "2 days ago",
-    category: "Drift",
-  },
-  {
-    id: 2,
-    name: "Racing Setup v2",
-    car: "BMW M3",
-    lastModified: "1 week ago",
-    category: "Racing",
-  },
-  {
-    id: 3,
-    name: "Experimental",
-    car: "Toyota Supra",
-    lastModified: "3 days ago",
-    category: "Drag",
-  },
-];
+// const savedSetups = [
+//   {
+//     id: 1,
+//     name: "My Drift Setup #1",
+//     car: "Nissan 370Z",
+//     lastModified: "2 days ago",
+//     category: "Drift",
+//   },
+//   {
+//     id: 2,
+//     name: "Racing Setup v2",
+//     car: "BMW M3",
+//     lastModified: "1 week ago",
+//     category: "Racing",
+//   },
+//   {
+//     id: 3,
+//     name: "Experimental",
+//     car: "Toyota Supra",
+//     lastModified: "3 days ago",
+//     category: "Drag",
+//   },
+// ];
 
 export const SavedSetups = () => {
   const [, navigate] = useLocation();
+  const { deleteSetup } = useCarSetup();
+  const [setupToDelete, setSetupToDelete] = useState<string | null>(null);
+  const setups = useSetups();
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -36,11 +43,10 @@ export const SavedSetups = () => {
           ← Back
         </Button>
       </div>
-
       <div className="space-y-4">
-        {savedSetups.map((setup) => (
+        {setups.map((setup) => (
           <div
-            key={setup.id}
+            key={setup}
             className="group bg-white rounded-xl border-2 border-gray-200 hover:border-green-500 hover:shadow-lg transition-all duration-300 p-6"
           >
             <div className="flex items-center justify-between">
@@ -50,22 +56,24 @@ export const SavedSetups = () => {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900">
-                    {setup.name}
+                    {setup}
                   </h3>
                   <div className="flex items-center space-x-4 text-sm text-gray-600">
-                    <span>{setup.car}</span>
+                    <span>{setup}</span>
                     <span>•</span>
-                    <span className={`px-2 py-1 rounded text-xs`}>
-                      {setup.category}
-                    </span>
+                    <span className={`px-2 py-1 rounded text-xs`}>{setup}</span>
                     <span>•</span>
-                    <span>Modified {setup.lastModified}</span>
+                    <span>Modified: TODO</span>
                   </div>
                 </div>
               </div>
               <div className="flex space-x-2">
-                <Button flavor="ghost" size="sm">
-                  Edit
+                <Button
+                  flavor="warning"
+                  size="sm"
+                  onClick={() => setSetupToDelete(setup)}
+                >
+                  Delete
                 </Button>
                 <Button flavor="success" size="sm">
                   Open
@@ -76,7 +84,7 @@ export const SavedSetups = () => {
         ))}
       </div>
 
-      {savedSetups.length === 0 && (
+      {setups.length === 0 && (
         <div className="text-center py-12">
           <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -94,6 +102,18 @@ export const SavedSetups = () => {
           </Button>
         </div>
       )}
+      <ConfirmModal
+        title="Delete Setup"
+        message={`Are you sure you want to delete the setup "${setupToDelete}"? This action cannot be undone.`}
+        open={setupToDelete !== null}
+        onCancel={() => setSetupToDelete(null)}
+        onConfirm={() => {
+          if (setupToDelete) {
+            deleteSetup(setupToDelete);
+            setSetupToDelete(null);
+          }
+        }}
+      />
     </div>
   );
 };
