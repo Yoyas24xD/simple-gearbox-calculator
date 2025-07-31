@@ -1,8 +1,6 @@
-import { useState } from "react";
+import { useState, type FC } from "react";
 import { createPortal } from "react-dom";
 import { useCarSetup } from "../hooks/use-car-setup";
-import { useSetups } from "../hooks/use-setups";
-import { Autocomplete } from "./ui/autocomplete";
 import { Button } from "./ui/button";
 
 const parseCsv = (csv: string): { rpm: number; torque: number }[] => {
@@ -17,13 +15,14 @@ const parseCsv = (csv: string): { rpm: number; torque: number }[] => {
     });
 };
 
-export const InitialDataModal = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(true);
+export const InitialDataModal: FC<{ open: boolean; onClose: () => void }> = ({
+  open,
+  onClose,
+}) => {
   const [csv, setCsv] = useState<string>("");
-  const { setup, setSetup, loadSetup } = useCarSetup();
-  const setups = useSetups();
+  const { setSetup } = useCarSetup();
 
-  if (!isOpen) return null;
+  if (!open) return null;
 
   return createPortal(
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -41,49 +40,22 @@ export const InitialDataModal = () => {
           onChange={(e) => setCsv(e.target.value)}
           placeholder="e.g., 1000;50&#10;2000;80&#10;3000;120"
         />
-        <div className="flex flex-col sm:flex-row gap-4 py-2 items-center justify-center">
-          <Button
-            flavor="primary"
-            onClick={() => {
-              const parsedData = parseCsv(csv);
-              setSetup({
-                type: "UPDATE_TORQUE_LINE",
-                data: parsedData,
-              });
-              setCsv("");
-              setIsOpen(false);
-            }}
-            disabled={!csv.trim()}
-            className="w-full sm:w-auto flex-shrink-0"
-          >
-            Load CSV
-          </Button>
-          <div className="w-full sm:w-auto flex-grow">
-            <Autocomplete
-              disabled={setups.length === 0}
-              key={setups.length}
-              value={setup.name !== "New Setup" ? setup.name : ""}
-              placeholder="Or select an existing setup"
-              items={
-                setups.map((name) => ({
-                  label: name,
-                  value: name,
-                })) ?? []
-              }
-              onChange={(value) => {
-                setSetup({
-                  type: "UPDATE_SETUP_NAME",
-                  name: value,
-                });
-              }}
-              onSelect={(item) => {
-                if (!item) return;
-                loadSetup(item.value);
-                setIsOpen(false);
-              }}
-            />
-          </div>
-        </div>
+        <Button
+          flavor="primary"
+          onClick={() => {
+            const parsedData = parseCsv(csv);
+            setSetup({
+              type: "UPDATE_TORQUE_LINE",
+              data: parsedData,
+            });
+            setCsv("");
+            onClose();
+          }}
+          disabled={!csv.trim()}
+          className="w-full sm:w-auto flex-shrink-0"
+        >
+          Load CSV
+        </Button>
       </section>
     </div>,
     document.body,

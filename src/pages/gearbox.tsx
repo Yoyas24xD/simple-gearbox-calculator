@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { GearConfig } from "../components/gear-config";
 import { Header } from "../components/header";
 import { InitialDataModal } from "../components/initial-data-modal";
@@ -14,26 +15,13 @@ export const Gearbox = () => {
   const { config } = useGlobalConfig();
   const { setup } = useCarSetup();
   const hpLine = useHpLine(setup.torqueLine);
+  const [editTorqueLine, setEditTorqueLine] = useState(false);
 
   // zip data and hpLine
   const dataWithHp = setup.torqueLine.map((point, index) => ({
     ...point,
     hp: hpLine[index],
   }));
-
-  // Render the initial data modal if torque data is empty
-  if (setup.torqueLine.length === 0) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center">
-        <div className="text-center py-12 px-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg border border-gray-200">
-          <InitialDataModal />
-          <p className="text-gray-600 text-lg mt-4">
-            Please enter RPM and torque data to start.
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
@@ -85,6 +73,10 @@ export const Gearbox = () => {
           )}
         </section>
       </div>
+      <InitialDataModal
+        open={editTorqueLine}
+        onClose={() => setEditTorqueLine(false)}
+      />
     </div>
   );
 };
