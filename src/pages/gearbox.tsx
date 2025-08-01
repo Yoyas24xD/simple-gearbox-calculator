@@ -25,61 +25,55 @@ export const Gearbox = () => {
   }));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <Header />
-
-        <section className="space-y-8 mt-8">
-          <GearConfig />
-          <WheelConfig />
-          {config.hpTorqueGraph.show && (
-            <>
-              <LineChartMultiple
-                style={{ height: config.hpTorqueGraph.height + "px" }}
-                lines={[
-                  {
-                    label: "torque",
-                    color: "#4a90e2",
-                    data: setup.torqueLine.map((point) => ({
-                      key: Math.trunc(point.rpm),
-                      value: point.torque,
-                    })),
-                  },
-                  {
-                    label: "hp",
-                    color: "#e94e77",
-                    data: dataWithHp.map((point) => ({
-                      key: Math.trunc(point.rpm),
-                      value: point.hp,
-                    })),
-                  },
-                ]}
-                xTickStep={125}
-                hidePoints={!config.hpTorqueGraph.showPoints}
-              />
-              <Button
-                flavor="secondary"
-                onClick={() => setEditTorqueLine(true)}
-              >
-                Edit Torque Line
-              </Button>
-              <Divider />
-            </>
-          )}
-          {config.gearsGraph.show && (
-            <>
-              <GearsPlot data={dataWithHp} />
-              <Divider />
-            </>
-          )}
-          {config.speedGraph.show && (
-            <>
-              <SpeedPlot />
-              <Divider />
-            </>
-          )}
-        </section>
-      </div>
+    <div className="container mx-auto px-4 py-4 max-w-7xl min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      <Header />
+      <section className="space-y-8 mt-8">
+        <GearConfig />
+        <WheelConfig />
+        {config.hpTorqueGraph.show && (
+          <>
+            <LineChartMultiple
+              style={{ height: config.hpTorqueGraph.height + "px" }}
+              lines={[
+                {
+                  label: "torque",
+                  color: "#4a90e2",
+                  data: setup.torqueLine.map((point) => ({
+                    key: Math.trunc(point.rpm),
+                    value: point.torque,
+                  })),
+                },
+                {
+                  label: "hp",
+                  color: "#e94e77",
+                  data: dataWithHp.map((point) => ({
+                    key: Math.trunc(point.rpm),
+                    value: point.hp,
+                  })),
+                },
+              ]}
+              xTickStep={125}
+              hidePoints={!config.hpTorqueGraph.showPoints}
+            />
+            <Button flavor="secondary" onClick={() => setEditTorqueLine(true)}>
+              Edit Torque Line
+            </Button>
+            <Divider />
+          </>
+        )}
+        {config.gearsGraph.show && (
+          <>
+            <GearsPlot data={dataWithHp} />
+            <Divider />
+          </>
+        )}
+        {config.speedGraph.show && (
+          <>
+            <SpeedPlot />
+            <Divider />
+          </>
+        )}
+      </section>
       <UpdateTorqueModal
         open={editTorqueLine}
         onClose={() => setEditTorqueLine(false)}

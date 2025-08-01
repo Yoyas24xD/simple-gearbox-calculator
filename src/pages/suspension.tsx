@@ -154,51 +154,49 @@ export const Suspension = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 font-inter">
-          <Header />
-          <div className="container mx-auto px-4 py-8 max-w-7xl">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 border-b pb-4 border-gray-200">
-              General Car Parameters
-            </h2>
-            <div className="space-y-8">
-              <div className="flex justify-center gap-8 mb-8">
-                <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm w-64">
-                  <Input
-                    label="Ride Frequency (Hz)"
-                    type="number"
-                    min={0.1}
-                    step={0.01}
-                    value={rideFrequency}
-                    onChange={(e) => setRideFrequency(Number(e.target.value))}
-                  />
-                </div>
-                <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm w-64">
-                  <Input
-                    label="Damping Ratio"
-                    type="number"
-                    min={0}
-                    step={0.01}
-                    value={dampingRatio}
-                    onChange={(e) => setDampingRatio(Number(e.target.value))}
-                  />
-                </div>
+    <div className="container mx-auto px-4 py-4 max-w-7xl min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 font-inter">
+        <Header />
+        <div className="container mx-auto px-4 py-8 max-w-7xl">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 border-b pb-4 border-gray-200">
+            General Car Parameters
+          </h2>
+          <div className="space-y-8">
+            <div className="flex justify-center gap-8 mb-8">
+              <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm w-64">
+                <Input
+                  label="Ride Frequency (Hz)"
+                  type="number"
+                  min={0.1}
+                  step={0.01}
+                  value={rideFrequency}
+                  onChange={(e) => setRideFrequency(Number(e.target.value))}
+                />
               </div>
-              {renderGeneralParameters()}
-              <hr className="border-t-2 border-gray-200 my-8" />
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {renderDamperSection(
-                  "Front Dampers",
-                  frontSpringStiffness,
-                  frontDampingCoefficient,
-                )}
-                {renderDamperSection(
-                  "Rear Dampers",
-                  rearSpringStiffness,
-                  rearDampingCoefficient,
-                )}
+              <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm w-64">
+                <Input
+                  label="Damping Ratio"
+                  type="number"
+                  min={0}
+                  step={0.01}
+                  value={dampingRatio}
+                  onChange={(e) => setDampingRatio(Number(e.target.value))}
+                />
               </div>
+            </div>
+            {renderGeneralParameters()}
+            <hr className="border-t-2 border-gray-200 my-8" />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {renderDamperSection(
+                "Front Dampers",
+                frontSpringStiffness,
+                frontDampingCoefficient,
+              )}
+              {renderDamperSection(
+                "Rear Dampers",
+                rearSpringStiffness,
+                rearDampingCoefficient,
+              )}
             </div>
           </div>
         </div>
