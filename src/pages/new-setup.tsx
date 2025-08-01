@@ -1,10 +1,10 @@
+import { useState } from "react";
+import { toast } from "sonner";
 import { useLocation } from "wouter";
+import { SetupNameModal } from "../components/setup-name-modal";
 import { Button } from "../components/ui/button";
 import cars from "../data/cars.json";
-import { SetupNameModal } from "../components/setup-name-modal";
-import { useState } from "react";
 import { useCarSetup, type CarSetup } from "../hooks/use-car-setup";
-import { toast } from "sonner";
 
 export const NewSetup = () => {
   const [, navigate] = useLocation();
@@ -73,6 +73,7 @@ export const NewSetup = () => {
             duration: 10_000,
           });
           setSelectedCar(null);
+          window.scrollTo(0, 0);
           navigate("/gearbox");
         }}
       />

@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { GearConfig } from "../components/gear-config";
 import { Header } from "../components/header";
-import { UpdateTorqueModal } from "../components/update-torque-modal";
 import { GearsPlot } from "../components/plots/gears";
 import { LineChartMultiple } from "../components/plots/line";
 import { SpeedPlot } from "../components/plots/speed";
+import { Button } from "../components/ui/button";
 import { Divider } from "../components/ui/divider";
+import { UpdateTorqueModal } from "../components/update-torque-modal";
 import { WheelConfig } from "../components/wheel-config";
 import { useCarSetup } from "../hooks/use-car-setup";
 import { useGlobalConfig } from "../hooks/use-global-config";
@@ -56,6 +57,12 @@ export const Gearbox = () => {
                 xTickStep={125}
                 hidePoints={!config.hpTorqueGraph.showPoints}
               />
+              <Button
+                flavor="secondary"
+                onClick={() => setEditTorqueLine(true)}
+              >
+                Edit Torque Line
+              </Button>
               <Divider />
             </>
           )}

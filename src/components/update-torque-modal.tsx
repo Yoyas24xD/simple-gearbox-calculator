@@ -1,4 +1,5 @@
-import { useState, type FC } from "react";
+import { X } from "lucide-react";
+import { useEffect, useState, type FC } from "react";
 import { createPortal } from "react-dom";
 import { useCarSetup } from "../hooks/use-car-setup";
 import { Button } from "./ui/button";
@@ -22,11 +23,22 @@ export const UpdateTorqueModal: FC<{ open: boolean; onClose: () => void }> = ({
   const [csv, setCsv] = useState<string>("");
   const { setSetup } = useCarSetup();
 
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "auto";
+  }, [open]);
+
   if (!open) return null;
 
   return createPortal(
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <section className="bg-white p-8 rounded-xl shadow-2xl max-w-lg w-full text-center">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+      <section className="bg-white p-8 rounded-xl shadow-2xl max-w-lg w-full text-center relative">
+        <Button
+          flavor="ghost"
+          className="absolute top-4 right-4"
+          onClick={onClose}
+        >
+          <X className="w-6 h-6" />
+        </Button>
         <h3 className="text-2xl font-bold text-gray-900 mb-4">
           Enter RPM + Torque Data
         </h3>
@@ -38,7 +50,7 @@ export const UpdateTorqueModal: FC<{ open: boolean; onClose: () => void }> = ({
           rows={10}
           value={csv}
           onChange={(e) => setCsv(e.target.value)}
-          placeholder="e.g., 1000;50&#10;2000;80&#10;3000;120"
+          placeholder={`e.g.\n1000;200\n2000;250\n...`}
         />
         <Button
           flavor="primary"
