@@ -155,23 +155,27 @@ export const Suspension = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 font-inter">
-      <Header />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <div className="space-y-8">
-          {renderGeneralParameters()}
-          <hr className="border-t-2 border-gray-200 my-8" />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {renderDamperSection(
-              "Front Dampers",
-              frontSpringStiffness,
-              frontDampingCoefficient,
-            )}
-            {renderDamperSection(
-              "Rear Dampers",
-              rearSpringStiffness,
-              rearDampingCoefficient,
-            )}
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 font-inter">
+          <Header />
+          <div className="container mx-auto px-4 py-8 max-w-7xl">
+            <div className="space-y-8">
+              {renderGeneralParameters()}
+              <hr className="border-t-2 border-gray-200 my-8" />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {renderDamperSection(
+                  "Front Dampers",
+                  frontSpringStiffness,
+                  frontDampingCoefficient,
+                )}
+                {renderDamperSection(
+                  "Rear Dampers",
+                  rearSpringStiffness,
+                  rearDampingCoefficient,
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
