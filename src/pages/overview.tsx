@@ -1,10 +1,10 @@
 import { AlertCircle, Car, FileText, Plus } from "lucide-react";
-import { useLocation } from "wouter";
-import cars from "../data/cars.json";
-import { useSetups } from "../hooks/use-setups";
-import Logo from "../assets/logo-ae86.webp";
-import { useCarSetup } from "../hooks/use-car-setup";
 import { useEffect } from "react";
+import { useLocation } from "wouter";
+import Logo from "../assets/logo-ae86.webp";
+import cars from "../data/cars.json";
+import { useCarSetup } from "../hooks/use-car-setup";
+import { useSetups } from "../hooks/use-setups";
 
 export const Overview = () => {
   const [, navigate] = useLocation();
@@ -13,7 +13,7 @@ export const Overview = () => {
 
   useEffect(() => {
     clearSetup();
-  }, [clearSetup]);
+  }, []);
 
   return (
     <div className="space-y-8">

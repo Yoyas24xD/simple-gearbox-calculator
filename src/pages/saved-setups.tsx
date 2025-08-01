@@ -1,5 +1,5 @@
 import { FileText, Settings } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { ConfirmModal } from "../components/confirm-modal";
 import { Button } from "../components/ui/button";
@@ -32,9 +32,16 @@ import { useSetups } from "../hooks/use-setups";
 
 export const SavedSetups = () => {
   const [, navigate] = useLocation();
-  const { deleteSetup, loadSetup } = useCarSetup();
+  const { setup, deleteSetup, loadSetup } = useCarSetup();
   const [setupToDelete, setSetupToDelete] = useState<string | null>(null);
   const setups = useSetups();
+
+  useEffect(() => {
+    console.log("Current setup:", setup);
+    if (setup.torqueLine.length) {
+      navigate("/gearbox");
+    }
+  }, [setup]);
 
   return (
     <div className="space-y-6">
