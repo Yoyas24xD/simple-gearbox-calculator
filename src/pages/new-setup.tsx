@@ -5,7 +5,6 @@ import { SetupNameModal } from "../components/setup-name-modal";
 import { Button } from "../components/ui/button";
 import cars from "../data/cars.json";
 import { useCarSetup, type CarSetup } from "../hooks/use-car-setup";
-
 export const NewSetup = () => {
   const [, navigate] = useLocation();
   const [selectedCar, setSelectedCar] = useState<CarSetup["baseCar"] | null>(
@@ -28,32 +27,40 @@ export const NewSetup = () => {
         <p className="text-gray-600 mb-4">
           Create a completely custom setup without using any template
         </p>
+        <p className="text-gray-500 mb-4 px-4 py-2 border-l-4 border-yellow-400 bg-yellow-50 italic">
+          <span className="font-semibold">Note:</span> It's recommended to use a
+          car template to ensure you have the necessary parameters for a
+          realistic simulation.
+        </p>
         <Button flavor="warning" size="lg">
           Create Blank Setup
         </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {cars
+        {[...cars]
           .sort((a, b) => a.car.localeCompare(b.car))
           .map((car) => (
-            <div
+            <button
               key={car.car}
-              className="group bg-white rounded-xl border-2 border-gray-200 hover:border-blue-500 hover:shadow-lg transition-all duration-300 overflow-hidden"
+              type="button"
+              className={`group bg-white rounded-xl border-2 border-gray-200 hover:border-blue-500 hover:shadow-lg transition-all duration-300 overflow-hidden cursor-pointer ${
+                selectedCar?.car === car.car
+                  ? "border-blue-500 ring-2 ring-blue-300"
+                  : ""
+              }`}
+              onClick={() => setSelectedCar(car)}
+              aria-pressed={selectedCar?.car === car.car}
             >
               <div className="p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   {car.car}
                 </h3>
-                <Button
-                  flavor="primary"
-                  fullWidth
-                  onClick={() => setSelectedCar(car)}
-                >
-                  Use this car
-                </Button>
+                <p className="text-gray-600 text-sm mb-2">
+                  Engine: {car.engine.power_hp} HP, {car.engine.mass_kg} kg
+                </p>
               </div>
-            </div>
+            </button>
           ))}
       </div>
       <SetupNameModal
