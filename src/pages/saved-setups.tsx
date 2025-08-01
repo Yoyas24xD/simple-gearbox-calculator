@@ -6,38 +6,14 @@ import { Button } from "../components/ui/button";
 import { useCarSetup } from "../hooks/use-car-setup";
 import { useSetups } from "../hooks/use-setups";
 
-// const savedSetups = [
-//   {
-//     id: 1,
-//     name: "My Drift Setup #1",
-//     car: "Nissan 370Z",
-//     lastModified: "2 days ago",
-//     category: "Drift",
-//   },
-//   {
-//     id: 2,
-//     name: "Racing Setup v2",
-//     car: "BMW M3",
-//     lastModified: "1 week ago",
-//     category: "Racing",
-//   },
-//   {
-//     id: 3,
-//     name: "Experimental",
-//     car: "Toyota Supra",
-//     lastModified: "3 days ago",
-//     category: "Drag",
-//   },
-// ];
-
 export const SavedSetups = () => {
   const [, navigate] = useLocation();
   const { setup, deleteSetup, loadSetup } = useCarSetup();
   const [setupToDelete, setSetupToDelete] = useState<string | null>(null);
   const setups = useSetups();
 
+  // wait setup update to redirect to gearbox
   useEffect(() => {
-    console.log("Current setup:", setup);
     if (setup.torqueLine.length) {
       navigate("/gearbox");
     }
@@ -108,7 +84,7 @@ export const SavedSetups = () => {
           <Button
             flavor="primary"
             size="lg"
-            onClick={() => navigate("/new-setup")} // TODO: Implement setup creation logic
+            onClick={() => navigate("/new-setup")}
           >
             Create First Setup
           </Button>
