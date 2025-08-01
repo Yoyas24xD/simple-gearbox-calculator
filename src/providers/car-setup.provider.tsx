@@ -1,4 +1,10 @@
-import { useEffect, useMemo, useReducer, type ReactNode } from "react";
+import {
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+  type ReactNode,
+} from "react";
 import { toast } from "sonner";
 import {
   CarSetupContext,
@@ -55,7 +61,12 @@ const carSetupReducer = (
 };
 
 export const CarSetupProvider = ({ children }: { children: ReactNode }) => {
-  const [setup, dispatch] = useReducer(carSetupReducer, INITIAL_SETUP);
+  const [isModified, setIsModified] = useState(false);
+  const [setup, dispatch] = useReducer((state, action) => {
+    const newState = carSetupReducer(state, action);
+    setIsModified(true);
+    return newState;
+  }, INITIAL_SETUP);
   const { config } = useGlobalConfig();
   const storage = StorageFactory.getStorage<CarSetup>("indexeddb");
   const debouncedSave = useDebounce(
@@ -90,6 +101,7 @@ export const CarSetupProvider = ({ children }: { children: ReactNode }) => {
       value={useMemo(
         () => ({
           setup,
+          isModified,
           setSetup: dispatch,
           persistSetup: () => debouncedSave(setup),
           loadSetup: async (name: string) => {
@@ -99,11 +111,13 @@ export const CarSetupProvider = ({ children }: { children: ReactNode }) => {
               return;
             }
             dispatch({ type: "UPDATE_ALL", setup: savedSetup });
+            setIsModified(false);
           },
           deleteSetup: async (name: string) => {
             await storage.remove(name);
             toast.success(`Setup "${name}" deleted successfully!`);
             dispatch({ type: "UPDATE_ALL", setup: INITIAL_SETUP });
+            setIsModified(false);
           },
           attachToCar: (car: CarSetup["baseCar"]) => {
             dispatch({
@@ -119,9 +133,10 @@ export const CarSetupProvider = ({ children }: { children: ReactNode }) => {
           },
           clearSetup: () => {
             dispatch({ type: "UPDATE_ALL", setup: INITIAL_SETUP });
+            setIsModified(false);
           },
         }),
-        [setup, dispatch, storage],
+        [setup, dispatch, storage, isModified],
       )}
     >
       {children}

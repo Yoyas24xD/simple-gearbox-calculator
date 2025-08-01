@@ -12,8 +12,9 @@ import { Input } from "./ui/input";
 export const Header = () => {
   const [location, navigate] = useLocation();
   const [openConfig, setOpenConfig] = useState(false);
-  const { setup, setSetup, persistSetup } = useCarSetup();
+  const { isModified, setup, setSetup, persistSetup } = useCarSetup();
   const [overwriteOpen, setOverwriteOpen] = useState(false);
+  const [exitOpen, setExitOpen] = useState(false);
   const setups = useSetups();
 
   if (!setup.torqueLine.length) {
@@ -31,10 +32,23 @@ export const Header = () => {
         </h1>
       </div>
       <nav className="flex space-x-4 mb-4 sm:mb-0">
-        {/* TODO: add exit without saving confirmation */}
-        <Link to="/">Home</Link>
-        <Link to="/suspension">Suspension</Link>
-        <Link to="/gearbox">Gearbox</Link>
+        <nav className="flex space-x-4">
+          <button
+            type="button"
+            className="text-orange-600 hover:text-orange-500 font-medium transition-colors cursor-pointer"
+            onClick={() => {
+              if (isModified) {
+                setExitOpen(true);
+                return;
+              }
+              navigate("/");
+            }}
+          >
+            Home
+          </button>
+          <Link to="/suspension">Suspension</Link>
+          <Link to="/gearbox">Gearbox</Link>
+        </nav>
       </nav>
       <div className="flex items-center space-x-2 w-full sm:w-auto justify-end">
         <Input
@@ -73,6 +87,16 @@ export const Header = () => {
         open={overwriteOpen}
         onCancel={() => setOverwriteOpen(false)}
         onConfirm={persistSetup}
+      />
+      <ConfirmModal
+        title="Exit Without Saving"
+        message={`Are you sure you want to exit without saving the current setup "${setup.name}"? This action cannot be undone.`}
+        open={exitOpen}
+        onCancel={() => setExitOpen(false)}
+        onConfirm={() => {
+          setExitOpen(false);
+          navigate("/");
+        }}
       />
       <GlobalConfig open={openConfig} onClose={() => setOpenConfig(false)} />
     </header>

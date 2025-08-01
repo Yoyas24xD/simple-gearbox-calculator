@@ -30,6 +30,7 @@ export type UpdateSetupAction =
 
 export interface CarSetupReducer {
   setup: CarSetup;
+  isModified: boolean;
   setSetup: (action: UpdateSetupAction) => void;
   persistSetup: () => void;
   loadSetup: (name: string) => void;
