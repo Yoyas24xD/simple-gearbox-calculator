@@ -19,19 +19,6 @@ export const WheelConfig = () => {
     isAwd: false,
   });
 
-  // TODO: check if this effect is necessary
-  // It initializes the wheel circumference based on the initial state.
-  // If the initial state is always set, this might not be needed.
-  useEffect(() => {
-    const { width, profile, rimDiameter } = state;
-    setSetup({
-      type: "UPDATE_WHEEL_CIRCUMFERENCE",
-      wheelCircumference:
-        Math.PI *
-        (rimDiameter + ((width * profile) / 25.4) * (state.isAwd ? 4 : 2)),
-    });
-  }, []);
-
   const handleChange = (
     field: keyof WheelConfigState,
     value: number | boolean,

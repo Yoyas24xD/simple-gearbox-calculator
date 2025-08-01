@@ -62,11 +62,7 @@ const carSetupReducer = (
 
 export const CarSetupProvider = ({ children }: { children: ReactNode }) => {
   const [isModified, setIsModified] = useState(false);
-  const [setup, dispatch] = useReducer((state, action) => {
-    const newState = carSetupReducer(state, action);
-    setIsModified(true);
-    return newState;
-  }, INITIAL_SETUP);
+  const [setup, dispatch] = useReducer(carSetupReducer, INITIAL_SETUP);
   const { config } = useGlobalConfig();
   const storage = StorageFactory.getStorage<CarSetup>("indexeddb");
   const debouncedSave = useDebounce(
@@ -76,7 +72,7 @@ export const CarSetupProvider = ({ children }: { children: ReactNode }) => {
         success: "Setup saved successfully!",
         error: "Failed to save setup.",
       }),
-    500,
+    250,
   );
 
   useEffect(() => {
@@ -102,7 +98,12 @@ export const CarSetupProvider = ({ children }: { children: ReactNode }) => {
         () => ({
           setup,
           isModified,
-          setSetup: dispatch,
+          setSetup: (action: UpdateSetupAction) => {
+            if (action.type !== "UPDATE_ALL") {
+              setIsModified(true);
+            }
+            dispatch(action);
+          },
           persistSetup: () => debouncedSave(setup),
           loadSetup: async (name: string) => {
             const savedSetup = await storage.load(name);

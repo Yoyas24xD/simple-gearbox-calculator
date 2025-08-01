@@ -22,7 +22,7 @@ export const Overview = () => {
           <img
             src={Logo}
             alt="CarX Tools Logo"
-            className="w-64 h-64 rounded-full shadow-lg"
+            className="w-48 h-48 rounded-full shadow-lg"
           />
         </div>
         <p className="text-gray-600 text-lg max-w-2xl mx-auto">
