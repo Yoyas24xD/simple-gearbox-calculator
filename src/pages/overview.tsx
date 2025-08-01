@@ -44,8 +44,7 @@ export const Overview = () => {
         </div>
         <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-xl border border-yellow-200 flex flex-col justify-center items-center text-center">
           <div className="flex items-center space-x-3 mb-2">
-            <AlertCircle className="w-8 h-8 text-yellow-600" />{" "}
-            {/* A warning/info icon */}
+            <AlertCircle className="w-8 h-8 text-yellow-600" />
             <p className="text-2xl font-bold text-yellow-900">
               Under Development
             </p>

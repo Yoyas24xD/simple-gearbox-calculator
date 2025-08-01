@@ -86,7 +86,10 @@ export const Header = () => {
         message={`Are you sure you want to overwrite the current setup "${setup.name}"? This action cannot be undone.`}
         open={overwriteOpen}
         onCancel={() => setOverwriteOpen(false)}
-        onConfirm={persistSetup}
+        onConfirm={() => {
+          persistSetup();
+          setOverwriteOpen(false);
+        }}
       />
       <ConfirmModal
         title="Exit Without Saving"

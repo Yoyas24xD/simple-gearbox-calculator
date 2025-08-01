@@ -31,6 +31,6 @@ createRoot(document.getElementById("root")!).render(
         </Router>
       </CarSetupProvider>
     </GlobalConfigProvider>
-    <Toaster richColors />
+    <Toaster richColors position="top-center" />
   </StrictMode>,
 );
