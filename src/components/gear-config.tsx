@@ -20,7 +20,7 @@ export const GearConfig = () => {
         Gear Configuration
       </h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4 items-end">
-        <div className="col-span-full sm:col-span-1">
+        <div className="col-span-full sm:col-span-1 flex flex-col justify-end">
           <label
             htmlFor="final-drive"
             className="block text-sm font-medium text-gray-700 mb-1"
@@ -29,6 +29,7 @@ export const GearConfig = () => {
           </label>
           <Input
             id="final-drive"
+            className="w-full"
             step={0.01}
             type="number"
             value={setup.finalDrive}
