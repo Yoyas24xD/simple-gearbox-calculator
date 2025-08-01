@@ -29,6 +29,10 @@ export const Overview = () => {
           The ultimate tool for optimizing your CarX setups. Adjust suspension,
           gearbox, and more with precision.
         </p>
+        <p className="text-gray-500 text-xs max-w-2xl mx-auto">
+          All your data is managed locally in your browser. This tool does not
+          store or send any personal information.
+        </p>
       </div>
 
       {/* Quick Stats */}

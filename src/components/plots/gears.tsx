@@ -56,7 +56,9 @@ export const GearsPlot: FC<Props> = ({ data, className }) => {
       style={{ height: config.gearsGraph.height + "px" }}
       className={className}
       lines={
-        setup.gears.every((g) => g)
+        setup.gears.every((g) => g) &&
+        setup.wheel.circumference &&
+        setup.finalDrive
           ? [
               ...lines,
               {

@@ -11,7 +11,7 @@ export const Suspension = () => {
 
   // Front suspension calculations
   const frontWeight = (setup.weightDistribution[0] / 100) * setup.weight;
-  const frontSprungMass = frontWeight / 2 - setup.wheelWeight;
+  const frontSprungMass = frontWeight / 2 - setup.wheel.weight;
   const frontSpringStiffness =
     4 * Math.PI ** 2 * frontSprungMass * RIDE_FREQUENCY ** 2;
   const frontDampingCoefficient =
@@ -22,7 +22,7 @@ export const Suspension = () => {
 
   // Rear suspension calculations
   const rearWeight = (setup.weightDistribution[1] / 100) * setup.weight;
-  const rearSprungMass = rearWeight / 2 - setup.wheelWeight;
+  const rearSprungMass = rearWeight / 2 - setup.wheel.weight;
   const rearSpringStiffness =
     4 * Math.PI ** 2 * rearSprungMass * RIDE_FREQUENCY ** 2;
   const rearDampingCoefficient =
@@ -57,11 +57,11 @@ export const Suspension = () => {
             label="Wheel Weight (kg)"
             type="number"
             id="wheelWeight"
-            value={setup.wheelWeight}
+            value={setup.wheel.weight}
             onChange={(e) =>
               setSetup({
-                type: "UPDATE_WHEEL_WEIGHT",
-                wheelWeight: Number(e.target.value),
+                type: "UPDATE_WHEEL",
+                wheel: { ...setup.wheel, weight: Number(e.target.value) },
               })
             }
           />

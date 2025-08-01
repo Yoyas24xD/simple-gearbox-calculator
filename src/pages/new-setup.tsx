@@ -10,7 +10,12 @@ export const NewSetup = () => {
   const [selectedCar, setSelectedCar] = useState<CarSetup["baseCar"] | null>(
     null,
   );
-  const { setSetup, attachToCar } = useCarSetup();
+  const { setSetup, attachToCar, isModified } = useCarSetup();
+
+  if (isModified) {
+    navigate("/gearbox");
+  }
+
   return (
     <section className="space-y-6">
       <div className="flex items-center justify-between">
