@@ -1,4 +1,4 @@
-import type { JSX } from "react";
+import { useState, type JSX } from "react";
 import { Header } from "../components/header";
 import { Input } from "../components/ui/input";
 import { useCarSetup } from "../hooks/use-car-setup";
@@ -8,34 +8,33 @@ const DAMPING_RATIO = 1;
 
 export const Suspension = () => {
   const { setup, setSetup } = useCarSetup();
+  const [rideFrequency, setRideFrequency] = useState(RIDE_FREQUENCY);
+  const [dampingRatio, setDampingRatio] = useState(DAMPING_RATIO);
 
   // Front suspension calculations
   const frontWeight = (setup.weightDistribution[0] / 100) * setup.weight;
   const frontSprungMass = frontWeight / 2 - setup.wheel.weight;
   const frontSpringStiffness =
-    4 * Math.PI ** 2 * frontSprungMass * RIDE_FREQUENCY ** 2;
+    4 * Math.PI ** 2 * frontSprungMass * rideFrequency ** 2;
   const frontDampingCoefficient =
     2 *
-    DAMPING_RATIO *
+    dampingRatio *
     Math.sqrt(frontSpringStiffness * frontSprungMass) *
-    DAMPING_RATIO;
+    dampingRatio;
 
   // Rear suspension calculations
   const rearWeight = (setup.weightDistribution[1] / 100) * setup.weight;
   const rearSprungMass = rearWeight / 2 - setup.wheel.weight;
   const rearSpringStiffness =
-    4 * Math.PI ** 2 * rearSprungMass * RIDE_FREQUENCY ** 2;
+    4 * Math.PI ** 2 * rearSprungMass * rideFrequency ** 2;
   const rearDampingCoefficient =
     2 *
-    DAMPING_RATIO *
+    dampingRatio *
     Math.sqrt(rearSpringStiffness * rearSprungMass) *
-    DAMPING_RATIO;
+    dampingRatio;
 
   const renderGeneralParameters = (): JSX.Element => (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6 border-b pb-4 border-gray-200">
-        General Car Parameters
-      </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
           <Input
@@ -160,7 +159,32 @@ export const Suspension = () => {
         <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 font-inter">
           <Header />
           <div className="container mx-auto px-4 py-8 max-w-7xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 border-b pb-4 border-gray-200">
+              General Car Parameters
+            </h2>
             <div className="space-y-8">
+              <div className="flex justify-center gap-8 mb-8">
+                <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm w-64">
+                  <Input
+                    label="Ride Frequency (Hz)"
+                    type="number"
+                    min={0.1}
+                    step={0.01}
+                    value={rideFrequency}
+                    onChange={(e) => setRideFrequency(Number(e.target.value))}
+                  />
+                </div>
+                <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm w-64">
+                  <Input
+                    label="Damping Ratio"
+                    type="number"
+                    min={0}
+                    step={0.01}
+                    value={dampingRatio}
+                    onChange={(e) => setDampingRatio(Number(e.target.value))}
+                  />
+                </div>
+              </div>
               {renderGeneralParameters()}
               <hr className="border-t-2 border-gray-200 my-8" />
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
