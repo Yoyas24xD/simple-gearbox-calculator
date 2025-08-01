@@ -24,10 +24,10 @@ export const GearsPlot: FC<Props> = ({ data, className }) => {
       key: Math.trunc(
         computeSpeedFromRpm(
           d.rpm,
-          setup.wheelCircumference,
+          setup.wheel.circumference,
           gear,
-          setup.finalDrive
-        )
+          setup.finalDrive,
+        ),
       ),
       value: d.torque * gear * setup.finalDrive,
     }));
@@ -41,9 +41,9 @@ export const GearsPlot: FC<Props> = ({ data, className }) => {
   const tractionLine = setup.gears.map((gear) => {
     const tractionSpeed = computeSpeedFromRpm(
       maxHpTorque.rpm,
-      setup.wheelCircumference,
+      setup.wheel.circumference,
       gear,
-      setup.finalDrive
+      setup.finalDrive,
     );
     return {
       key: Math.trunc(tractionSpeed),

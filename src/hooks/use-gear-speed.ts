@@ -10,7 +10,7 @@ export const useGearSpeed = (rpm: number, gearRatio: number): number => {
   const { setup } = useCarSetup();
   return computeSpeedFromRpm(
     rpm,
-    setup.wheelCircumference,
+    setup.wheel.circumference,
     gearRatio,
     setup.finalDrive,
   );
@@ -24,12 +24,12 @@ export const useGearSpeeds = (gearRatio: number): GearSpeed[] => {
         rpm,
         speed: computeSpeedFromRpm(
           rpm,
-          setup.wheelCircumference,
+          setup.wheel.circumference,
           gearRatio,
           setup.finalDrive,
         ),
       })),
-    [setup.torqueLine, setup.wheelCircumference, gearRatio, setup.finalDrive],
+    [setup.torqueLine, setup.wheel.circumference, gearRatio, setup.finalDrive],
   );
 };
 
@@ -43,13 +43,18 @@ export const useGearsSpeeds = (): GearSpeed[][] => {
           rpm,
           speed: computeSpeedFromRpm(
             rpm,
-            setup.wheelCircumference,
+            setup.wheel.circumference,
             gearRatio,
             setup.finalDrive,
           ),
         })),
       ),
-    [setup.gears, setup.torqueLine, setup.wheelCircumference, setup.finalDrive],
+    [
+      setup.gears,
+      setup.torqueLine,
+      setup.wheel.circumference,
+      setup.finalDrive,
+    ],
   );
 };
 

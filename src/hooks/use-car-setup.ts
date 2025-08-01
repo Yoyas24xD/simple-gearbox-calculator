@@ -5,11 +5,18 @@ export interface CarSetup {
   torqueLine: { rpm: number; torque: number }[];
   gears: number[];
   finalDrive: number;
-  wheelCircumference: number;
   name: string;
   weight: number;
   weightDistribution: [front: number, rear: number];
-  wheelWeight: number;
+  wheel: {
+    width: number;
+    profile: number;
+    rimDiameter: number;
+    weight: number;
+    circumference: number; // This will be calculated based on width, profile, and rim diameter
+    isAwd: boolean;
+  };
+  lastModified?: Date;
   baseCar: (typeof cars)[number] | null;
 }
 
@@ -24,8 +31,9 @@ export type UpdateSetupAction =
       type: "UPDATE_WEIGHT_DISTRIBUTION";
       weightDistribution: CarSetup["weightDistribution"];
     }
-  | { type: "UPDATE_WHEEL_WEIGHT"; wheelWeight: number }
+  | { type: "UPDATE_WHEEL"; wheel: CarSetup["wheel"] }
   | { type: "UPDATE_BASE_CAR"; baseCar: CarSetup["baseCar"] }
+  | { type: "UPDATE_LAST_MODIFIED"; lastModified: Date }
   | { type: "UPDATE_ALL"; setup: CarSetup };
 
 export interface CarSetupReducer {
