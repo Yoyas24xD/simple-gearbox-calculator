@@ -13,7 +13,7 @@ interface Props {
   xTickStep?: number;
 }
 
-const remoteDuplicates = (arr: Props["lines"][number]["data"]) => {
+const removeDuplicates = (arr: Props["lines"][number]["data"]) => {
   const seen = new Set();
   return arr.filter((item) => {
     const key = item.value;
@@ -38,7 +38,7 @@ export const LineChartMultiple: FC<Props> = ({
 
   const lines = rawLines.map((line) => ({
     ...line,
-    data: remoteDuplicates(line.data),
+    data: removeDuplicates(line.data),
   }));
 
   const allKeys = lines.flatMap((l) => l.data.map((d) => d.key));
