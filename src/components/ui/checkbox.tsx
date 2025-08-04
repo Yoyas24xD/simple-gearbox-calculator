@@ -4,10 +4,17 @@ interface Props {
   checked: boolean;
   onChange: (checked: React.ChangeEvent<HTMLInputElement>) => void;
   label?: string;
+
+  className?: string;
 }
-export const Checkbox: FC<Props> = ({ checked, onChange, label }) => {
+export const Checkbox: FC<Props> = ({
+  checked,
+  onChange,
+  label,
+  className,
+}) => {
   return (
-    <label className="flex items-center gap-2 cursor-pointer">
+    <label className={`flex items-center gap-2 cursor-pointer ${className}`}>
       <input
         type="checkbox"
         checked={checked}
