@@ -32,7 +32,7 @@ export const LineChartMultiple: FC<Props> = ({
   hidePoints,
   xTickStep = 50,
 }) => {
-  if (rawLines[0]?.data.length === 0) {
+  if (rawLines.every((line) => line.data.length === 0)) {
     return null;
   }
 
@@ -57,10 +57,6 @@ export const LineChartMultiple: FC<Props> = ({
     .curve(curveMonotoneX);
 
   const dataLines = lines.map((lineData) => line(lineData.data));
-
-  if (dataLines.some((d) => d === null)) {
-    return null;
-  }
 
   const xTicks = xScale
     .ticks(Math.ceil((maxKey - minKey) / xTickStep)) // Calcular el número de ticks basado en el paso
