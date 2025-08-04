@@ -43,7 +43,7 @@ export const UpdateTorqueModal: FC<{ open: boolean; onClose: () => void }> = ({
           Enter RPM + Torque Data
         </h3>
         <p className="text-gray-600 mb-6">
-          Paste your CSV data (RPM;Torque per line) or load an existing setup.
+          Paste your CSV data (RPM;Torque per line).
         </p>
         <textarea
           className="w-full h-64 border border-gray-300 text-gray-800 p-3 rounded-lg outline-none focus:border-blue-500 focus:ring-blue-500 resize-y mb-4"
