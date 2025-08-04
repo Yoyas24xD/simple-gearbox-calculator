@@ -5,11 +5,15 @@ import { useCarSetup } from "../hooks/use-car-setup";
 
 const RIDE_FREQUENCY = 3; // Hz
 const DAMPING_RATIO = 1;
+const TIRE_RATE = 35 * 9.80665 * 1000; // N/mm, 35 kgf/mm + 9.80665 kN/m (converted to N/mm)
 
 export const Suspension = () => {
   const { setup, setSetup } = useCarSetup();
   const [rideFrequency, setRideFrequency] = useState(RIDE_FREQUENCY);
   const [dampingRatio, setDampingRatio] = useState(DAMPING_RATIO);
+  const [rollGradient, setRollGradient] = useState(0);
+  const [frontWheelOffset, setFrontWheelOffset] = useState(0);
+  const [rearWheelOffset, setRearWheelOffset] = useState(0);
 
   // Front suspension calculations
   const frontWeight = (setup.weightDistribution[0] / 100) * setup.weight;
@@ -33,75 +37,168 @@ export const Suspension = () => {
     Math.sqrt(rearSpringStiffness * rearSprungMass) *
     dampingRatio;
 
+  const trackWidthMean =
+    (frontWheelOffset / 100 +
+      (setup.baseCar?.f_track_width ?? 0) +
+      rearWheelOffset / 100 +
+      (setup.baseCar?.r_track_width ?? 0)) /
+    2;
+
+  const trackWidthMoment = trackWidthMean ** 2 / 2; // Momento de inercia lateral simplificado
+
+  const wheelRateMean = (frontSpringStiffness + rearSpringStiffness) / 2;
+
+  const magicNumber = (setup.weightDistribution[0] / 100) * 1.05 * 100;
+
+  const desiredRollRate =
+    (setup.weight * (setup.baseCar?.height ?? 0)) / rollGradient;
+  // Excel formula: =(3.14/180)*(D28*C28*(B25^2/2))/(C28*(B25^2/2)*3.14/180-D28)-(3.14*A29*B25^2/2)/180
+  // My formula: =((3.14/180)* (B48 * B47 * B46)) / ((B47 * B46 * PI()) / 180 - B48) - (PI() * B45 * 1.59^2)/2/180
+  const totalRollRate =
+    ((Math.PI / 180) * (desiredRollRate * TIRE_RATE * trackWidthMoment)) /
+      ((TIRE_RATE * trackWidthMoment * Math.PI) / 180 - desiredRollRate) -
+    (Math.PI * wheelRateMean * trackWidthMean ** 2) / 2 / 180;
+
+  const frontAntiRollBarStiffness =
+    (((totalRollRate * magicNumber) / 100) * Math.PI) /
+    (180 * trackWidthMean ** 2);
+  const rearAntiRollBarStiffness =
+    (((totalRollRate * (100 - magicNumber)) / 100) * Math.PI) /
+    (180 * trackWidthMean ** 2);
+
+  console.log({
+    frontSpringStiffness,
+    rearSpringStiffness,
+    rollGradient,
+    trackWidthMean,
+    wheelRateMean,
+    magicNumber,
+    trackWidthMoment,
+    desiredRollRate,
+    totalRollRate,
+    frontAntiRollBarStiffness,
+    rearAntiRollBarStiffness,
+  });
+
   const renderGeneralParameters = (): JSX.Element => (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
-          <Input
-            label="Total Weight (kg)"
-            type="number"
-            id="weight"
-            value={setup.weight}
-            onChange={(e) =>
-              setSetup({
-                type: "UPDATE_WEIGHT",
-                weight: Number(e.target.value),
-              })
-            }
-          />
-        </div>
+      <section className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          Chasis parameters
+        </h2>
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
+            <Input
+              label="Height (m)"
+              type="number"
+              value={setup.baseCar?.height}
+              readOnly={setup.baseCar !== null}
+              helperText="Value from selected chassis (read-only)"
+            />
+          </div>
+          <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
+            <Input
+              label="Front wheel offset (cm)"
+              type="number"
+              step={0.5}
+              value={frontWheelOffset}
+              onChange={(e) => setFrontWheelOffset(Number(e.target.value))}
+            />
+          </div>
+          <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
+            <Input
+              label="Rear wheel offset (cm)"
+              type="number"
+              step={0.5}
+              value={rearWheelOffset}
+              onChange={(e) => setRearWheelOffset(Number(e.target.value))}
+            />
+          </div>
+          <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
+            <Input
+              label="Roll gradient (deg)"
+              type="number"
+              min={0.07}
+              max={0.08}
+              step={0.001}
+              value={rollGradient}
+              onChange={(e) => setRollGradient(Number(e.target.value))}
+            />
+          </div>
+        </section>
+      </section>
+      <section className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
+        <h2 className="text-2xl font-bold text-gray-900 pb-4">
+          General Car Parameters
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
+            <Input
+              label="Total Weight (kg)"
+              type="number"
+              id="weight"
+              value={setup.weight}
+              onChange={(e) =>
+                setSetup({
+                  type: "UPDATE_WEIGHT",
+                  weight: Number(e.target.value),
+                })
+              }
+            />
+          </div>
 
-        <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
-          <Input
-            label="Wheel Weight (kg)"
-            type="number"
-            id="wheelWeight"
-            value={setup.wheel.weight}
-            onChange={(e) =>
-              setSetup({
-                type: "UPDATE_WHEEL",
-                wheel: { ...setup.wheel, weight: Number(e.target.value) },
-              })
-            }
-          />
-        </div>
+          <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
+            <Input
+              label="Wheel Weight (kg)"
+              type="number"
+              id="wheelWeight"
+              value={setup.wheel.weight}
+              onChange={(e) =>
+                setSetup({
+                  type: "UPDATE_WHEEL",
+                  wheel: { ...setup.wheel, weight: Number(e.target.value) },
+                })
+              }
+            />
+          </div>
 
-        <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
-          <Input
-            label="Front Weight Distribution (%)"
-            type="number"
-            min={0}
-            max={100}
-            id="weight-distribution-front"
-            value={setup.weightDistribution[0]}
-            onChange={(e) => {
-              const value = Number(e.target.value);
-              setSetup({
-                type: "UPDATE_WEIGHT_DISTRIBUTION",
-                weightDistribution: [value, 100 - value],
-              });
-            }}
-          />
-        </div>
+          <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
+            <Input
+              label="Front Weight Distribution (%)"
+              type="number"
+              min={0}
+              max={100}
+              id="weight-distribution-front"
+              value={setup.weightDistribution[0]}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                setSetup({
+                  type: "UPDATE_WEIGHT_DISTRIBUTION",
+                  weightDistribution: [value, 100 - value],
+                });
+              }}
+            />
+          </div>
 
-        <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
-          <Input
-            label="Rear Weight Distribution (%)"
-            type="number"
-            min={0}
-            max={100}
-            id="weight-distribution-rear"
-            value={setup.weightDistribution[1]}
-            onChange={(e) => {
-              const value = Number(e.target.value);
-              setSetup({
-                type: "UPDATE_WEIGHT_DISTRIBUTION",
-                weightDistribution: [100 - value, value],
-              });
-            }}
-          />
+          <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
+            <Input
+              label="Rear Weight Distribution (%)"
+              type="number"
+              min={0}
+              max={100}
+              id="weight-distribution-rear"
+              value={setup.weightDistribution[1]}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                setSetup({
+                  type: "UPDATE_WEIGHT_DISTRIBUTION",
+                  weightDistribution: [100 - value, value],
+                });
+              }}
+            />
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 
@@ -158,9 +255,6 @@ export const Suspension = () => {
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 font-inter">
         <Header />
         <div className="container mx-auto px-4 py-8 max-w-7xl">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 border-b pb-4 border-gray-200">
-            General Car Parameters
-          </h2>
           <div className="space-y-8">
             <div className="flex justify-center gap-8 mb-8">
               <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm w-64">
