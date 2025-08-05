@@ -54,7 +54,7 @@ const carSetupReducer = (
 ): CarSetup => {
   switch (action.type) {
     case "UPDATE_TORQUE_LINE":
-      return { ...state, torqueLine: action.data };
+      return { ...state, torqueLine: action.torqueLine };
     case "UPDATE_GEARS":
       return { ...state, gears: action.gears };
     case "UPDATE_FINAL_DRIVE":

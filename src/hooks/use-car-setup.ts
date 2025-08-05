@@ -26,7 +26,7 @@ export interface CarSetup {
 }
 
 export type UpdateSetupAction =
-  | { type: "UPDATE_TORQUE_LINE"; data: CarSetup["torqueLine"] }
+  | { type: "UPDATE_TORQUE_LINE"; torqueLine: CarSetup["torqueLine"] }
   | { type: "UPDATE_GEARS"; gears: number[] }
   | { type: "UPDATE_FINAL_DRIVE"; finalDrive: number }
   | { type: "UPDATE_SETUP_NAME"; name: string }

@@ -10,7 +10,7 @@ const parseCsv = (csv: string): { rpm: number; torque: number }[] => {
     .split("\n")
     .map((line) => {
       const [rpm, torque] = line
-        .split(";")
+        .split(line.includes(";") ? ";" : ",")
         .map((n) => Number(n.replace(",", ".")));
       return { rpm: rpm > 100 ? rpm : rpm * 1000, torque };
     });
@@ -58,7 +58,7 @@ export const UpdateTorqueModal: FC<{ open: boolean; onClose: () => void }> = ({
             const parsedData = parseCsv(csv);
             setSetup({
               type: "UPDATE_TORQUE_LINE",
-              data: parsedData,
+              torqueLine: parsedData,
             });
             setCsv("");
             onClose();
