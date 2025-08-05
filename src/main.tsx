@@ -16,7 +16,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <GlobalConfigProvider>
       <CarSetupProvider>
-        <Router base="/carx-tools">
+        <Router base="/simple-gearbox-calculator">
           <Switch>
             <Route path="/" component={HOCEntrypoint(Overview)} />
             <Route path="/new-setup" component={HOCEntrypoint(NewSetup)} />
