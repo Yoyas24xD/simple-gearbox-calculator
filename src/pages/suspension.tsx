@@ -37,6 +37,7 @@ export const Suspension = () => {
     Math.sqrt(rearSpringStiffness * rearSprungMass) *
     dampingRatio;
 
+  // Anti-roll bar calculations
   const trackWidthMean =
     (frontWheelOffset / 100 +
       (setup.baseCar?.f_track_width ?? 0) +
@@ -52,8 +53,7 @@ export const Suspension = () => {
 
   const desiredRollRate =
     (setup.weight * (setup.baseCar?.height ?? 0)) / rollGradient;
-  // Excel formula: =(3.14/180)*(D28*C28*(B25^2/2))/(C28*(B25^2/2)*3.14/180-D28)-(3.14*A29*B25^2/2)/180
-  // My formula: =((3.14/180)* (B48 * B47 * B46)) / ((B47 * B46 * PI()) / 180 - B48) - (PI() * B45 * 1.59^2)/2/180
+
   const totalRollRate =
     ((Math.PI / 180) * (desiredRollRate * TIRE_RATE * trackWidthMoment)) /
       ((TIRE_RATE * trackWidthMoment * Math.PI) / 180 - desiredRollRate) -
@@ -62,23 +62,10 @@ export const Suspension = () => {
   const frontAntiRollBarStiffness =
     (((totalRollRate * magicNumber) / 100) * Math.PI) /
     (180 * trackWidthMean ** 2);
+
   const rearAntiRollBarStiffness =
     (((totalRollRate * (100 - magicNumber)) / 100) * Math.PI) /
     (180 * trackWidthMean ** 2);
-
-  console.log({
-    frontSpringStiffness,
-    rearSpringStiffness,
-    rollGradient,
-    trackWidthMean,
-    wheelRateMean,
-    magicNumber,
-    trackWidthMoment,
-    desiredRollRate,
-    totalRollRate,
-    frontAntiRollBarStiffness,
-    rearAntiRollBarStiffness,
-  });
 
   const renderGeneralParameters = (): JSX.Element => (
     <div className="space-y-6">
@@ -207,6 +194,7 @@ export const Suspension = () => {
     title: string,
     stiffness: number,
     dampingCoefficient: number,
+    arbStiffness: number,
   ): JSX.Element => (
     <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-lg">
       <h3 className="text-xl font-semibold text-gray-900 mb-4">{title}</h3>
@@ -243,6 +231,13 @@ export const Suspension = () => {
           label="Fast Rebound"
           type="number"
           value={Math.trunc((dampingCoefficient * 3) / 4)}
+          readOnly
+          className="!text-blue-700 font-bold"
+        />
+        <Input
+          label="Anti-Roll Bar Stiffness (N/mm)"
+          type="number"
+          value={(arbStiffness ?? 0).toFixed(2)}
           readOnly
           className="!text-blue-700 font-bold"
         />
@@ -285,11 +280,13 @@ export const Suspension = () => {
                 "Front Dampers",
                 frontSpringStiffness,
                 frontDampingCoefficient,
+                frontAntiRollBarStiffness,
               )}
               {renderDamperSection(
                 "Rear Dampers",
                 rearSpringStiffness,
                 rearDampingCoefficient,
+                rearAntiRollBarStiffness,
               )}
             </div>
           </div>
