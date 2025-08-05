@@ -16,6 +16,11 @@ export interface CarSetup {
     circumference: number; // This will be calculated based on width, profile, and rim diameter
     isAwd: boolean;
   };
+  suspension: {
+    rollGradient: number;
+    frontWheelOffset: number;
+    rearWheelOffset: number;
+  };
   lastModified?: Date;
   baseCar: (typeof cars)[number] | null;
 }
@@ -24,7 +29,6 @@ export type UpdateSetupAction =
   | { type: "UPDATE_TORQUE_LINE"; data: CarSetup["torqueLine"] }
   | { type: "UPDATE_GEARS"; gears: number[] }
   | { type: "UPDATE_FINAL_DRIVE"; finalDrive: number }
-  | { type: "UPDATE_WHEEL_CIRCUMFERENCE"; wheelCircumference: number }
   | { type: "UPDATE_SETUP_NAME"; name: string }
   | { type: "UPDATE_WEIGHT"; weight: number }
   | {
@@ -32,6 +36,7 @@ export type UpdateSetupAction =
       weightDistribution: CarSetup["weightDistribution"];
     }
   | { type: "UPDATE_WHEEL"; wheel: CarSetup["wheel"] }
+  | { type: "UPDATE_SUSPENSION"; suspension: CarSetup["suspension"] }
   | { type: "UPDATE_BASE_CAR"; baseCar: CarSetup["baseCar"] }
   | { type: "UPDATE_LAST_MODIFIED"; lastModified: Date }
   | { type: "UPDATE_ALL"; setup: CarSetup };

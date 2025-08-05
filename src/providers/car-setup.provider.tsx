@@ -6,6 +6,7 @@ import {
   type ReactNode,
 } from "react";
 import { toast } from "sonner";
+import { MAX_ROLL_GRADIENT, MIN_ROLL_GRADIENT } from "../config";
 import {
   CarSetupContext,
   type CarSetup,
@@ -29,6 +30,11 @@ const INITIAL_SETUP: CarSetup = {
     weight: 12,
     circumference: 0, // This will be calculated based on width, profile, and rim diameter
     isAwd: false,
+  },
+  suspension: {
+    rollGradient: MIN_ROLL_GRADIENT,
+    frontWheelOffset: 0,
+    rearWheelOffset: 0,
   },
   baseCar: null, // Initially no car is attached
 };
@@ -67,6 +73,19 @@ const carSetupReducer = (
           ),
         },
       };
+    case "UPDATE_SUSPENSION":
+      return {
+        ...state,
+        suspension: {
+          ...state.suspension,
+          ...action.suspension,
+          // Ensure rollGradient is within the defined limits
+          rollGradient: Math.min(
+            Math.max(action.suspension.rollGradient, MIN_ROLL_GRADIENT),
+            MAX_ROLL_GRADIENT,
+          ),
+        },
+      };
     case "UPDATE_SETUP_NAME":
       return { ...state, name: action.name };
     case "UPDATE_ALL":
@@ -96,7 +115,9 @@ const carSetupReducer = (
         baseCar: action.baseCar ? { ...action.baseCar } : null, // TODO: maybe dont need to clone here
       };
     default:
-      throw new Error(`Unknown action type: ${action.type}`);
+      throw new Error(
+        `Unknown action type: ${(action as UpdateSetupAction).type}`, // TODO: possibly error
+      );
   }
 };
 

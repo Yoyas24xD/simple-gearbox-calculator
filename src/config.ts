@@ -8,3 +8,9 @@ export const GEARS_COLORS = [
   "#f8e71c", // yellow
   "#7ed321", // green
 ];
+
+export const MIN_ROLL_GRADIENT = 0.02;
+export const MAX_ROLL_GRADIENT = 0.7;
+
+export const MIN_RIDE_FREQUENCY = 3; // Hz
+export const MAX_RIDE_FREQUENCY = 5; // Hz

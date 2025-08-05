@@ -2,6 +2,12 @@ import { useState, type JSX } from "react";
 import { Header } from "../components/header";
 import { Input } from "../components/ui/input";
 import { useCarSetup } from "../hooks/use-car-setup";
+import {
+  MAX_RIDE_FREQUENCY,
+  MAX_ROLL_GRADIENT,
+  MIN_RIDE_FREQUENCY,
+  MIN_ROLL_GRADIENT,
+} from "../config";
 
 const RIDE_FREQUENCY = 3; // Hz
 const DAMPING_RATIO = 1;
@@ -11,10 +17,6 @@ export const Suspension = () => {
   const { setup, setSetup } = useCarSetup();
   const [rideFrequency, setRideFrequency] = useState(RIDE_FREQUENCY);
   const [dampingRatio, setDampingRatio] = useState(DAMPING_RATIO);
-  const [rollGradient, setRollGradient] = useState(0);
-  const [frontWheelOffset, setFrontWheelOffset] = useState(0);
-  const [rearWheelOffset, setRearWheelOffset] = useState(0);
-
   // Front suspension calculations
   const frontWeight = (setup.weightDistribution[0] / 100) * setup.weight;
   const frontSprungMass = frontWeight / 2 - setup.wheel.weight;
@@ -39,9 +41,9 @@ export const Suspension = () => {
 
   // Anti-roll bar calculations
   const trackWidthMean =
-    (frontWheelOffset / 100 +
+    (setup.suspension.frontWheelOffset / 100 +
       (setup.baseCar?.f_track_width ?? 0) +
-      rearWheelOffset / 100 +
+      setup.suspension.rearWheelOffset / 100 +
       (setup.baseCar?.r_track_width ?? 0)) /
     2;
 
@@ -52,7 +54,8 @@ export const Suspension = () => {
   const magicNumber = (setup.weightDistribution[0] / 100) * 1.05 * 100;
 
   const desiredRollRate =
-    (setup.weight * (setup.baseCar?.height ?? 0)) / rollGradient;
+    (setup.weight * (setup.baseCar?.height ?? 0)) /
+    setup.suspension.rollGradient;
 
   const totalRollRate =
     ((Math.PI / 180) * (desiredRollRate * TIRE_RATE * trackWidthMoment)) /
@@ -88,8 +91,16 @@ export const Suspension = () => {
               label="Front wheel offset (cm)"
               type="number"
               step={0.5}
-              value={frontWheelOffset}
-              onChange={(e) => setFrontWheelOffset(Number(e.target.value))}
+              value={setup.suspension.frontWheelOffset}
+              onChange={(e) =>
+                setSetup({
+                  type: "UPDATE_SUSPENSION",
+                  suspension: {
+                    ...setup.suspension,
+                    frontWheelOffset: Number(e.target.value),
+                  },
+                })
+              }
             />
           </div>
           <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
@@ -97,19 +108,35 @@ export const Suspension = () => {
               label="Rear wheel offset (cm)"
               type="number"
               step={0.5}
-              value={rearWheelOffset}
-              onChange={(e) => setRearWheelOffset(Number(e.target.value))}
+              value={setup.suspension.rearWheelOffset}
+              onChange={(e) =>
+                setSetup({
+                  type: "UPDATE_SUSPENSION",
+                  suspension: {
+                    ...setup.suspension,
+                    rearWheelOffset: Number(e.target.value),
+                  },
+                })
+              }
             />
           </div>
           <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm">
             <Input
               label="Roll gradient (deg)"
               type="number"
-              min={0.07}
-              max={0.08}
+              min={MIN_ROLL_GRADIENT}
+              max={MAX_ROLL_GRADIENT}
               step={0.001}
-              value={rollGradient}
-              onChange={(e) => setRollGradient(Number(e.target.value))}
+              value={setup.suspension.rollGradient}
+              onChange={(e) =>
+                setSetup({
+                  type: "UPDATE_SUSPENSION",
+                  suspension: {
+                    ...setup.suspension,
+                    rollGradient: Number(e.target.value),
+                  },
+                })
+              }
             />
           </div>
         </section>
@@ -259,7 +286,15 @@ export const Suspension = () => {
                   min={0.1}
                   step={0.01}
                   value={rideFrequency}
-                  onChange={(e) => setRideFrequency(Number(e.target.value))}
+                  onChange={(e) =>
+                    setRideFrequency(
+                      Math.min(
+                        Math.max(Number(e.target.value), MIN_RIDE_FREQUENCY),
+                        MAX_RIDE_FREQUENCY,
+                      ),
+                    )
+                  }
+                  helperText={`Min: ${MIN_RIDE_FREQUENCY} Hz, Max: ${MAX_RIDE_FREQUENCY} Hz`}
                 />
               </div>
               <div className="bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm w-64">
